@@ -64,7 +64,7 @@ namespace Netomity.Interfaces.Basic
             //        else
             //            _commandBuffer += c;
             //}
-
+            base.DataRevieved(result);
             DataReceived(result);
 
         }
@@ -101,6 +101,7 @@ namespace Netomity.Interfaces.Basic
 
         public override void Send(string text)
         {
+            base.Send(text);
             _sp.Write(text);
         }
 

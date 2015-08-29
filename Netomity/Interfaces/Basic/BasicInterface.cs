@@ -25,7 +25,17 @@ namespace Netomity.Interfaces.Basic
         public abstract event DataReceivedHandler DataReceived;
         public abstract bool IsOpen { get; }
         public abstract Task Open();
-        public abstract void Send(string text);
+        public virtual void Send(string text)
+        {
+            Log(Core.Logger.Level.Debug,
+                String.Format("Sending Data:>{0}<", text));
+        }
+
+        public void DataRevieved(string text)
+        {
+            Log(Core.Logger.Level.Debug,
+                String.Format("Recdeived Data:>{0}<", text));
+        }
 
 
     }

@@ -79,8 +79,8 @@ namespace Netomity.Interfaces.Basic
                 if (bytesRead < 0)
                     break;
                 var data = System.Text.Encoding.ASCII.GetString(buffer, 0, bytesRead);
-                Log(Core.Logger.Level.Debug,
-                    String.Format("Received: {0}", data));
+
+                base.DataRevieved(data);
 
                 DataReceived(data);
             } 
@@ -89,8 +89,7 @@ namespace Netomity.Interfaces.Basic
     
         public override void Send(string data)
         {
-            Log(Core.Logger.Level.Debug,
-               String.Format("Sending: {0}", data));
+            base.Send(data);
             if (IsOpen && _stream != null)
             {
                 // Process the data sent by the client.

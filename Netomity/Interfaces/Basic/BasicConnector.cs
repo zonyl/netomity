@@ -80,14 +80,14 @@ namespace Netomity.Interfaces.Basic
 
         private void _DataReceived(string data)
         {
-            Log(Core.Logger.Level.Debug, "data received");
+            base.DataRevieved(data);
             if (DataReceived != null)
                 DataReceived(data);
         }
 
         public override void Send(string data)
         {
-            Log(Core.Logger.Level.Debug, "data to send");
+            base.Send(data);
             _interfaces.ForEach(i => i.Send(data));
         }
 
