@@ -28,7 +28,7 @@ namespace NetomityTests.Interfaces.Basic
         [TestMethod]
         public void Functional1()
         {
-            var log = new Logger();
+            var log = new Logger(@"C:\temp\log.txt");
             var tcp1 = new TCPServer(2222) { Name = "Server 1" };
             var tcp2 = new TCPServer(2223) { Name = "Server 2" };
             var tcp3 = new TCPClient("127.0.0.1", 2223) { Name = "Client 2" };
@@ -49,6 +49,8 @@ namespace NetomityTests.Interfaces.Basic
             Thread.Sleep(1000);
             
             Assert.AreEqual(_str1, "asdf");
+
+            Thread.Sleep(10000);
 
         
         }

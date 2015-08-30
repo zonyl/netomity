@@ -48,7 +48,7 @@ namespace NetomityTests.Interfaces.Basic
         {
 
             var log = new Logger(@"c:\temp\log.txt");
-            var n = new NetomitySystem();
+            var n = NetomitySystem.Factory();
             var i1 = new TCPServer(2222);
             var i2 = new TCPServer(2223);
 

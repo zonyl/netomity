@@ -31,10 +31,10 @@ namespace Netomity.Interfaces.Basic
                 String.Format("Sending Data:>{0}<", text));
         }
 
-        public void DataRevieved(string text)
+        public virtual void _DataReceived(string text)
         {
             Log(Core.Logger.Level.Debug,
-                String.Format("Recdeived Data:>{0}<", text));
+                String.Format("Received Data:>{0}<", text));
         }
 
 

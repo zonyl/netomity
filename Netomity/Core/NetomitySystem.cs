@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Netomity.Core
@@ -9,8 +10,9 @@ namespace Netomity.Core
     public class NetomitySystem: NetomityObject
     {
         static PeriodicTimer c_pt = null;
+        static NetomitySystem c_ns = null;
 
-        public NetomitySystem()
+        private NetomitySystem()
         {
             if (c_pt == null)
             {
@@ -21,9 +23,25 @@ namespace Netomity.Core
             
         }
 
+        public static NetomitySystem Factory()
+        {
+            if (c_ns == null)
+                c_ns = new NetomitySystem();
+
+            return c_ns;
+        }
+
         private void HeartBeat()
         {
             Log(Core.Logger.Level.Debug, "HeartBeat");
+        }
+
+        public void Run()
+        {
+            while(true)
+            {
+                Thread.Sleep(1000);
+            }
         }
     }
 }

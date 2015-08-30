@@ -56,6 +56,28 @@ namespace Netomity.Core
 
         public void Log(Logger.Level level, string message)
         {
+            LogString(level: level, message: message);
+        }
+
+        public void Log(Exception ex)
+        {
+            LogString(
+                level: Core.Logger.Level.Error,
+                message: String.Format("Exception Occured: {0}",
+                    ex.ToString())
+                );
+        }
+       
+        public void Log(string message)
+        {
+            LogString(
+                level: Core.Logger.Level.Debug,
+                message: message
+                );
+        }
+
+        private void LogString(Core.Logger.Level level, string message)
+        {
             try
             {
                 var fMessage = String.Format(
@@ -73,6 +95,7 @@ namespace Netomity.Core
             {
                 Logger.Log(Core.Logger.Level.Error, ex.ToString());
             }
+
         }
 
     }

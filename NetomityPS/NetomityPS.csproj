@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PSNetomitySystem.cs" />
     <Compile Include="PSTCPClient.cs" />
     <Compile Include="PSLogger.cs" />
     <Compile Include="PSCBasicConnector.cs" />

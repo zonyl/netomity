@@ -42,7 +42,11 @@ namespace Netomity.Interfaces.Basic
                     catch (IOException exc)
                     {
                         //                        handleAppSerialError(exc);
-                        Console.WriteLine(exc.ToString());
+                        Log(exc);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log(ex);
                     }
                 }, null);
             };
@@ -64,13 +68,16 @@ namespace Netomity.Interfaces.Basic
             //        else
             //            _commandBuffer += c;
             //}
-            base.DataRevieved(result);
+            base._DataReceived(result);
             DataReceived(result);
 
         }
 
         public override Task Open()
         {
+            try
+            {
+
             //await Task.Run(() =>
             //{
             //    try
@@ -89,15 +96,20 @@ namespace Netomity.Interfaces.Basic
                     {
                         _sp.Open();
                     }
-                    catch (SystemException ex)
+                    catch (Exception ex)
                     {
-                        Log(Core.Logger.Level.Error, "Error:" + ex.ToString());
+                        Log(ex);
                     }
                     while (true)
                     { }
                 });
 
             c_tasks.Add(IntTask);
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+            }
             
             return IntTask;
         }

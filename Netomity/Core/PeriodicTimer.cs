@@ -18,7 +18,7 @@ namespace Netomity.Core
         public PeriodicTimer(int secs=60)
         {
             _timer = new Timer();
-            _timer.Interval = secs;
+            _timer.Interval = secs * 1000;
             _timer.Elapsed += new ElapsedEventHandler(OnEvent);
 
         }

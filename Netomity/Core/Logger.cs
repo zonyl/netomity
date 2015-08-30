@@ -49,21 +49,27 @@ namespace Netomity.Core
         {
             try
             {
+                var fmessage = String.Format(
+                    "{0}|{1}|{2}",
+                    DateTime.Now,
+                    level.ToString(),
+                    message
+                );
+
+                Console.WriteLine(fmessage);
                 lock (_lock)
                 {
                     using (var file = File.AppendText(LogPath))
                     {
-                        file.WriteLine(String.Format("{0}|{1}|{2}",
-                            DateTime.Now,
-                            level.ToString(),
-                            message)
-                        );
+                        file.WriteLine(fmessage);
                         file.Close();
                     }
                 }
             }
-            catch (SystemException ex)
+            catch (Exception ex)
             {
+                //throw ex;
+                Console.WriteLine("------Logger Error----");
                 Console.WriteLine("Logger Error: " + ex.ToString());
             }
             return true;

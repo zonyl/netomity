@@ -38,34 +38,40 @@ namespace Netomity.Interfaces.Basic
             Int32 port = Port;
             IPAddress localAddr = Address;
 
-            // TcpListener server = new TcpListener(port);
-            server = new TcpListener(localAddr, port);
-
-            // Start listening for client requests.
-            server.Start();
-
-            while (true)
+            try
             {
-                try
+                // TcpListener server = new TcpListener(port);
+                server = new TcpListener(localAddr, port);
+
+                // Start listening for client requests.
+                server.Start();
+
+                while (true)
                 {
-                    Log(Core.Logger.Level.Debug, "Waiting for Connections"); 
-                    TcpClient tcpClient = await server.AcceptTcpClientAsync();
-                    Log(Core.Logger.Level.Debug, "Process");
-                    Task t = ProcessRequest(tcpClient);
-                    Log(Core.Logger.Level.Debug, "Out");
-                    await t;
+                    try
+                    {
+                        Log(message: "Waiting for Connections");
+                        TcpClient tcpClient = await server.AcceptTcpClientAsync();
+                        Task t = ProcessRequest(tcpClient);
+                        await t;
+                    }
+                    catch (Exception ex)
+                    {
+                        Log(ex);
+                    }
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
             }
         }   
 
         private async Task ProcessRequest(TcpClient tcpClient)
         {
 
-            Log(Netomity.Core.Logger.Level.Info, String.Format(
+            Log(level: Netomity.Core.Logger.Level.Info, 
+                message: String.Format(
                 "Connection from: {0}",
                 tcpClient.Client.RemoteEndPoint.ToString()
                 ));
@@ -75,32 +81,46 @@ namespace Netomity.Interfaces.Basic
 
             while (true)
             {
-                int bytesRead = await _stream.ReadAsync(buffer, 0, buffer.Length);
-                if (bytesRead < 0)
-                    break;
-                var data = System.Text.Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                try
+                {
+                    int bytesRead = await _stream.ReadAsync(buffer, 0, buffer.Length);
+                    if (bytesRead < 0)
+                        break;
+                    var data = System.Text.Encoding.ASCII.GetString(buffer, 0, bytesRead);
 
-                base.DataRevieved(data);
+                    base._DataReceived(data);
 
-                DataReceived(data);
+                    if (DataReceived != null)
+                        DataReceived(data);
+                }
+                catch (Exception ex)
+                {
+                    Log(ex);
+                }
             } 
             
         }
     
         public override void Send(string data)
         {
-            base.Send(data);
-            if (IsOpen && _stream != null)
+            try
             {
-                // Process the data sent by the client.
-                byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
+                base.Send(data);
+                if (IsOpen && _stream != null)
+                {
+                    // Process the data sent by the client.
+                    byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
 
-                // Send back a response.
-                _stream.Write(msg, 0, msg.Length);
-                Log(Core.Logger.Level.Debug,
-                    String.Format("Sent: {0}", data));
+                    // Send back a response.
+                    _stream.Write(msg, 0, msg.Length);
+                    Log(message:
+                        String.Format("Sent: {0}", data));
+                }
             }
-
+            catch (Exception ex)
+            {
+                Log(ex);
+            }
         }
     }
 }

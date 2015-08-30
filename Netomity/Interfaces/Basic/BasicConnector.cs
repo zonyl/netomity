@@ -60,17 +60,24 @@ namespace Netomity.Interfaces.Basic
         {
             var task = Task.Factory.StartNew(() => 
                 {
-                    _interfaces.ForEach(i =>
-                        {
-                            IntTasks.Add(i.Open());
-                            Log(Logger.Level.Debug,
-                                String.Format("Opening:{0} - {1}",
-                                i.Name,
-                                i));
-                        }
-                    );
+                    try
+                    {
+                        _interfaces.ForEach(i =>
+                            {
+                                IntTasks.Add(i.Open());
+                                Log(Logger.Level.Debug,
+                                    String.Format("Opening:{0} - {1}",
+                                    i.Name,
+                                    i));
+                            }
+                        );
 
-                    Task.WaitAll(IntTasks.ToArray());
+                        Task.WaitAll(IntTasks.ToArray());
+                    }
+                    catch (Exception ex)
+                    {
+                        Log(ex);
+                    }
                 }
             );
 
@@ -78,17 +85,24 @@ namespace Netomity.Interfaces.Basic
 
         }
 
-        private void _DataReceived(string data)
+        private new void _DataReceived(string data)
         {
-            base.DataRevieved(data);
+            base._DataReceived(data);
             if (DataReceived != null)
                 DataReceived(data);
         }
 
         public override void Send(string data)
         {
-            base.Send(data);
-            _interfaces.ForEach(i => i.Send(data));
+            try
+            {
+                base.Send(data);
+                _interfaces.ForEach(i => i.Send(data));
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+            }
         }
 
         public override Boolean IsOpen

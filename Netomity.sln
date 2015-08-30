@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Instances\bud-proxy.ps1 = Instances\bud-proxy.ps1
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudProxy", "BudProxy\BudProxy.csproj", "{1A3832C6-4C5B-489C-850A-DEE5B7E3327D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{ABA9934A-0DC1-4D21-903D-347EF175865E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ABA9934A-0DC1-4D21-903D-347EF175865E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ABA9934A-0DC1-4D21-903D-347EF175865E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A3832C6-4C5B-489C-850A-DEE5B7E3327D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A3832C6-4C5B-489C-850A-DEE5B7E3327D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A3832C6-4C5B-489C-850A-DEE5B7E3327D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A3832C6-4C5B-489C-850A-DEE5B7E3327D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
