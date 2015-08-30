@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Netomity.Interfaces.Basic;
+using Netomity.Core;
 
 namespace NetomityTests.Interfaces.Basic
 {
@@ -26,7 +27,7 @@ namespace NetomityTests.Interfaces.Basic
             Assert.IsNotNull(_bc);
         }
 
-        //[TestMethod]
+        [TestMethod]
         public void Functional1()
         {
             var i1 = new TCPServer(2222);
@@ -37,25 +38,28 @@ namespace NetomityTests.Interfaces.Basic
 
             t.Wait(2000);
             Assert.IsTrue(i1.IsOpen);
-            Assert.IsTrue(i2.IsOpen);
-            t.Wait();
+            Assert.IsFalse(i2.IsOpen);
 
 
         }
 
-        //[TestMethod]
+        [TestMethod]
         public void Functional2()
         {
+
+            var log = new Logger(@"c:\temp\log.txt");
+            var n = new NetomitySystem();
             var i1 = new TCPServer(2222);
             var i2 = new TCPServer(2223);
 
             var bc = new BasicConnector(i1, i2);
             var t = bc.Open();
 
-            t.Wait(20000);
+            t.Wait(2000);
             Assert.IsTrue(i1.IsOpen);
             Assert.IsTrue(i2.IsOpen);
-            t.Wait();
+            t.Wait(5000);
+
 
 
         }

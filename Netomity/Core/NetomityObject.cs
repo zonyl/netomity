@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Netomity.Core
 {
     public abstract class NetomityObject : INetomityObject
     {
+        public static List<NetomityObject> c_objects = null;
+        public static List<Task> c_tasks = new List<Task>();
         static internal Logger c_logger = null;
         internal Logger _logger = null;
         public Logger Logger
@@ -28,12 +31,27 @@ namespace Netomity.Core
 
         public string Name { get; set; }
 
+        public List<Task> Tasks
+        {
+            get
+            {
+                return c_tasks;
+            }
+        }
+
         public NetomityObject(Logger logger=null)
         {
+
+            if (c_objects == null)
+                c_objects = new List<NetomityObject>();
+
+            if (c_tasks == null)
+                c_tasks = new List<Task>();
+
+            c_objects.Add(this);
+
             if (logger != null)
                 Logger = logger;
-            else
-                Logger = c_logger;
         }
 
         public void Log(Logger.Level level, string message)
@@ -53,7 +71,7 @@ namespace Netomity.Core
             }
             catch (System.Exception ex)
             {
-                var a = 0;
+                Logger.Log(Core.Logger.Level.Error, ex.ToString());
             }
         }
 

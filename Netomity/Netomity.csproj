@@ -54,7 +54,9 @@
     <Compile Include="Core\Factory.cs" />
     <Compile Include="Core\INetomityObject.cs" />
     <Compile Include="Core\Logger.cs" />
+    <Compile Include="Core\Netomity.cs" />
     <Compile Include="Core\NetomityObject.cs" />
+    <Compile Include="Core\PeriodicTimer.cs" />
     <Compile Include="Interfaces\Basic\BasicConnector.cs" />
     <Compile Include="Interfaces\Basic\BasicInterface.cs" />
     <Compile Include="Interfaces\Basic\IBasicInterface.cs" />

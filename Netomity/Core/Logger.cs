@@ -8,6 +8,8 @@ namespace Netomity.Core
 {
     public class Logger: NetomityObject
     {
+        private Object _lock = new Object();
+
         private const string DEFAULT_LOG_PATHNAME = "NetomityLog.txt";
 
         public enum Level
@@ -37,22 +39,32 @@ namespace Netomity.Core
 
             //_logger = this;
             Logger = this;
+
+            var message = "Netomity Logger Initialized: " + LogPath;
+            Console.WriteLine(message);
+            Log(Level.Info, message);
         }
 
         public Boolean Log(Level level, string message, object obj=null)
         {
-            var lockObj = new Object();
-            lock (lockObj)
+            try
             {
-                using (var file = File.AppendText(LogPath))
+                lock (_lock)
                 {
-                    file.WriteLine(String.Format("{0}|{1}|{2}",
-                        DateTime.Now,
-                        level.ToString(),
-                        message)
-                    );
-                    file.Close();
+                    using (var file = File.AppendText(LogPath))
+                    {
+                        file.WriteLine(String.Format("{0}|{1}|{2}",
+                            DateTime.Now,
+                            level.ToString(),
+                            message)
+                        );
+                        file.Close();
+                    }
                 }
+            }
+            catch (SystemException ex)
+            {
+                Console.WriteLine("Logger Error: " + ex.ToString());
             }
             return true;
         }

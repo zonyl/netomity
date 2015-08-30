@@ -12,7 +12,7 @@ namespace NetomityTests.Core
         [TestInitialize]
         public void SetUp()
         {
-            _log = new Logger();
+            _log = new Logger(@"c:\temp\log.txt");
         }
 
         [TestMethod]
@@ -26,6 +26,14 @@ namespace NetomityTests.Core
         {
             var result = _log.Log(Logger.Level.Debug, "Debug Message");
             Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void LoggerStatic()
+        {
+            var l2 = new Logger();
+
+
         }
     }
 }

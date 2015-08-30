@@ -69,26 +69,37 @@ namespace Netomity.Interfaces.Basic
 
         }
 
-        public override async Task Open()
+        public override Task Open()
         {
-            await Task.Run(() =>
-            {
-                try
-                {
-                _sp.Open();
-                }
-                catch (SystemException ex)
-                {
-                    Log(Core.Logger.Level.Error, ex.ToString());
-                }
-            });
-
-            //IntTask = Task.Factory.StartNew(() =>
+            //await Task.Run(() =>
+            //{
+            //    try
             //    {
-            //            _sp.Open();
-            //    });
+            //    _sp.Open();
+            //    }
+            //    catch (SystemException ex)
+            //    {
+            //        Log(Core.Logger.Level.Error, ex.ToString());
+            //    }
+            //});
 
-            //return IntTask;
+            IntTask = Task.Factory.StartNew(() =>
+                {
+                    try
+                    {
+                        _sp.Open();
+                    }
+                    catch (SystemException ex)
+                    {
+                        Log(Core.Logger.Level.Error, "Error:" + ex.ToString());
+                    }
+                    while (true)
+                    { }
+                });
+
+            c_tasks.Add(IntTask);
+            
+            return IntTask;
         }
 
         public override Boolean IsOpen
