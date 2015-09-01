@@ -122,5 +122,9 @@ namespace Netomity.Interfaces.Basic
                 return _interfaces;
             }
         }
+        public override void Close()
+        {
+            _interfaces.ForEach(i => i.Close());
+        }
     }
 }

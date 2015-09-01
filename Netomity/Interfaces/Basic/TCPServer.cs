@@ -16,6 +16,9 @@ namespace Netomity.Interfaces.Basic
 
         public int Port { get; set; }
         public IPAddress Address { get; set; }
+
+        TcpListener _server = null;
+
         public override bool IsOpen
         {
             get { return true; }
@@ -32,7 +35,6 @@ namespace Netomity.Interfaces.Basic
 
         public override async Task Open()
         {
-            TcpListener server = null;
 
         // Set the TcpListener on port 13000.
             Int32 port = Port;
@@ -41,17 +43,17 @@ namespace Netomity.Interfaces.Basic
             try
             {
                 // TcpListener server = new TcpListener(port);
-                server = new TcpListener(localAddr, port);
+                _server = new TcpListener(localAddr, port);
 
                 // Start listening for client requests.
-                server.Start();
+                _server.Start();
 
                 while (true)
                 {
                     try
                     {
                         Log(message: "Waiting for Connections");
-                        TcpClient tcpClient = await server.AcceptTcpClientAsync();
+                        TcpClient tcpClient = await _server.AcceptTcpClientAsync();
                         Task t = ProcessRequest(tcpClient);
                         await t;
                     }
@@ -84,7 +86,7 @@ namespace Netomity.Interfaces.Basic
                 try
                 {
                     int bytesRead = await _stream.ReadAsync(buffer, 0, buffer.Length);
-                    if (bytesRead < 0)
+                    if (bytesRead <= 0)
                         break;
                     var data = System.Text.Encoding.ASCII.GetString(buffer, 0, bytesRead);
 
@@ -121,6 +123,11 @@ namespace Netomity.Interfaces.Basic
             {
                 Log(ex);
             }
+        }
+
+        public override void Close()
+        {
+            _server.Stop();
         }
     }
 }

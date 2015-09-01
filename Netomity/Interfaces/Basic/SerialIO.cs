@@ -128,6 +128,10 @@ namespace Netomity.Interfaces.Basic
             _sp.Write(text);
         }
 
+        public override void Close()
+        {
+            _sp.Close();
+        }
 
     }
 }

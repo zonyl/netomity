@@ -15,6 +15,7 @@ namespace Netomity.Interfaces.Basic
         string _hostName = null;
         int _portNumber = 0;
         NetworkStream _stream = null;
+        Object connectingLock = new System.Object();
 
         public override event DataReceivedHandler DataReceived;
         public TCPClient(string hostName = null, int port = 0)
@@ -26,12 +27,16 @@ namespace Netomity.Interfaces.Basic
 
         public override async Task Open()
         {
-            _client = new TcpClient();
+            lock (connectingLock)
+            {
+                _client = new TcpClient();
 
-            Log(Core.Logger.Level.Debug, "Opening Connection");
+                Log(Core.Logger.Level.Debug, "Opening Connection");
 
-            await _client.ConnectAsync(_hostName, _portNumber);
-            _stream = _client.GetStream();
+                //await _client.ConnectAsync(_hostName, _portNumber);
+                _client.Connect(_hostName, _portNumber);
+                _stream = _client.GetStream();
+            }
 
             Log(Core.Logger.Level.Debug, "Established Connection");
 
@@ -52,6 +57,7 @@ namespace Netomity.Interfaces.Basic
 
         public override void Send(string data)
         {
+            lock (connectingLock) ;
             if (IsOpen && _stream != null)
             {
                 // Process the data sent by the client.
@@ -61,6 +67,11 @@ namespace Netomity.Interfaces.Basic
                 _stream.Write(msg, 0, msg.Length);
                 Log(Core.Logger.Level.Debug,
                         String.Format("Sent: {0}", data));
+            } else
+            {
+                Log(String.Format(
+                    "Client not connected to send: {0}",
+                    data));
             }
 
         }
@@ -71,6 +82,11 @@ namespace Netomity.Interfaces.Basic
             {
                 return _client.Connected;
             }
+        }
+
+        public override void Close()
+        {
+            _client.Close();
         }
 
     }
