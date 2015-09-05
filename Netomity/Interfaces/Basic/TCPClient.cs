@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Netomity.Utility;
 
 namespace Netomity.Interfaces.Basic
 {
@@ -47,7 +48,11 @@ namespace Netomity.Interfaces.Basic
                 int bytesRead = await _stream.ReadAsync(buffer, 0, buffer.Length);
                 if (bytesRead < 0)
                     break;
-                var data = System.Text.Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                var bArray = new byte[bytesRead];
+                for (int i =0; i<bytesRead; i++)
+                    bArray[i] = buffer[i];
+//                var data = System.Text.Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                var data = Conversions.BytesToAscii(bArray);
                 Log(Core.Logger.Level.Debug,
                     String.Format("Received: {0}", data));
                 DataReceived(data);
@@ -57,11 +62,12 @@ namespace Netomity.Interfaces.Basic
 
         public override void Send(string data)
         {
-            lock (connectingLock) ;
+            lock (connectingLock);
             if (IsOpen && _stream != null)
             {
                 // Process the data sent by the client.
-                byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
+                //byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
+                var msg = Conversions.AsciiToBytes(data);
 
                 // Send back a response.
                 _stream.Write(msg, 0, msg.Length);
@@ -80,7 +86,11 @@ namespace Netomity.Interfaces.Basic
         {
             get
             {
-                return _client.Connected;
+                var isOpen = false;
+                if (_client != null)
+                    isOpen = _client.Connected;
+
+                return isOpen;
             }
         }
 

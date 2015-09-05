@@ -3,6 +3,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Netomity.Interfaces;
 using Netomity.Interfaces.HA;
 using Netomity.Utility;
+using Netomity.Interfaces.Basic;
+using System.Threading;
 
 namespace NetomityTests.Interfaces
 {
@@ -43,6 +45,28 @@ namespace NetomityTests.Interfaces
             });
             var aData = Conversions.AsciiToHex(_data);
             Assert.AreEqual(sentData, aData);
+
+        }
+
+        [TestMethod]
+        public void CommandOnFunctionalTests1()
+        {
+            var t = new TCPClient(hostName: "192.168.12.161", port: 3333);
+            var i = new Insteon(basicInterface: t);
+            t.Open();
+            Thread.Sleep(2000);
+            //var sentData = "026219057B0F11FF";
+                    //        0262382E3F0F113F
+            //var aSentData = Conversions.HexToAscii(sentData);
+            i.Command(new Command()
+            {
+                Type = CommandType.Off,
+                Destination = "38.2E.A2"
+
+            });
+//            var aData = Conversions.AsciiToHex(_data);
+            //Assert.AreEqual(sentData, aData);
+            Thread.Sleep(20000);
 
         }
     }

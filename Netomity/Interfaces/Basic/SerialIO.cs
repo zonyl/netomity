@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.IO.Ports;
+using Netomity.Utility;
 
 namespace Netomity.Interfaces.Basic
 {
@@ -55,7 +56,8 @@ namespace Netomity.Interfaces.Basic
 
         private void _parseData(byte[] received)
         {
-            string result = System.Text.Encoding.UTF8.GetString(received);
+//            string result = System.Text.Encoding.UTF8.GetString(received);
+            string result = Conversions.BytesToAscii(received);
 
             //foreach (char c in result)
             //{
@@ -125,7 +127,11 @@ namespace Netomity.Interfaces.Basic
         public override void Send(string text)
         {
             base.Send(text);
-            _sp.Write(text);
+
+            //_sp.Write(text);
+            var buffer = Conversions.AsciiToBytes(text);
+            _sp.Write(buffer,0, buffer.Length);
+            base.Send(Conversions.BytesToAscii(buffer));
         }
 
         public override void Close()

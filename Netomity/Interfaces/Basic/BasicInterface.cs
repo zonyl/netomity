@@ -1,4 +1,5 @@
 ﻿using Netomity.Core;
+using Netomity.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,13 +31,18 @@ namespace Netomity.Interfaces.Basic
         public virtual void Send(string text)
         {
             Log(Core.Logger.Level.Debug,
-                String.Format("Sending Data:>{0}<", text));
+                String.Format("Sending Data:>{0}< ({1})",
+                text,
+                Conversions.AsciiToHex(text))
+                );
         }
 
         public virtual void _DataReceived(string text)
         {
             Log(Core.Logger.Level.Debug,
-                String.Format("Received Data:>{0}<", text));
+                String.Format("Received Data:>{0}< ({1})", 
+                text,
+                Conversions.AsciiToHex(text)));
         }
 
 

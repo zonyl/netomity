@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
+using Netomity.Utility;
 
 
 namespace Netomity.Interfaces.Basic
@@ -21,16 +22,19 @@ namespace Netomity.Interfaces.Basic
 
         public override bool IsOpen
         {
-            get { return true; }
+            get { return _stream != null; }
         }
         public Task IntTask { get; set; }
 
         NetworkStream _stream = null;
 
-        public TCPServer(int port, string address="127.0.0.1")
+        public TCPServer(int port, string address="Any")
         {
             Port = port;
-            Address = IPAddress.Parse(address);
+            if (address == "Any")
+                Address = IPAddress.Any;
+            else
+                Address = IPAddress.Parse(address);
         }
 
         public override async Task Open()
@@ -38,12 +42,11 @@ namespace Netomity.Interfaces.Basic
 
         // Set the TcpListener on port 13000.
             Int32 port = Port;
-            IPAddress localAddr = Address;
 
             try
             {
                 // TcpListener server = new TcpListener(port);
-                _server = new TcpListener(localAddr, port);
+                _server = new TcpListener(Address, port);
 
                 // Start listening for client requests.
                 _server.Start();
@@ -81,25 +84,34 @@ namespace Netomity.Interfaces.Basic
             byte[] buffer = new byte[1024];
             _stream = tcpClient.GetStream();
 
-            while (true)
+            while (tcpClient.Connected)
             {
                 try
                 {
                     int bytesRead = await _stream.ReadAsync(buffer, 0, buffer.Length);
                     if (bytesRead <= 0)
                         break;
-                    var data = System.Text.Encoding.ASCII.GetString(buffer, 0, bytesRead);
-
+                    var bArray = new Byte[bytesRead];
+                    for (int i = 0; i < bytesRead; i++)
+                        bArray[i] = buffer[i];
+//                    var data = System.Text.Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                    var data = Conversions.BytesToAscii(bArray);
                     base._DataReceived(data);
 
                     if (DataReceived != null)
                         DataReceived(data);
                 }
+                catch (System.IO.IOException ex)
+                {
+                    Log(Core.Logger.Level.Info, "Client Connection Closed or Fault");
+                    break;
+                }
                 catch (Exception ex)
                 {
                     Log(ex);
                 }
-            } 
+            }
+            _stream = null;
             
         }
     
@@ -111,7 +123,8 @@ namespace Netomity.Interfaces.Basic
                 if (IsOpen && _stream != null)
                 {
                     // Process the data sent by the client.
-                    byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
+                    //byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
+                    var msg = Conversions.AsciiToBytes(data);
 
                     // Send back a response.
                     _stream.Write(msg, 0, msg.Length);
