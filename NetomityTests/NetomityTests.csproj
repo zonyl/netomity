@@ -60,10 +60,11 @@
     <Compile Include="Core\LoggerTests.cs" />
     <Compile Include="Core\FactoryTests.cs" />
     <Compile Include="Core\NetomityObjectTests.cs" />
-    <Compile Include="Interfaces\Basic\TCPClient.cs" />
-    <Compile Include="Interfaces\Basic\TCPServer.cs" />
-    <Compile Include="Interfaces\Basic\BasicConnector.cs" />
+    <Compile Include="Interfaces\Basic\TCPClientTests.cs" />
+    <Compile Include="Interfaces\Basic\TCPServerTests.cs" />
+    <Compile Include="Interfaces\Basic\BasicConnectorTests.cs" />
     <Compile Include="Interfaces\HA\InsteonTests.cs" />
+    <Compile Include="Interfaces\HA\HABaseTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\Conversions.cs" />
   </ItemGroup>

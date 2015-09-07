@@ -60,14 +60,13 @@ namespace NetomityTests.Interfaces
             //var aSentData = Conversions.HexToAscii(sentData);
             i.Command(new Command()
             {
-                Type = CommandType.Off,
+                Type = CommandType.On,
                 Destination = "38.2E.A2"
 
             });
 //            var aData = Conversions.AsciiToHex(_data);
             //Assert.AreEqual(sentData, aData);
             Thread.Sleep(20000);
-
         }
     }
 }
