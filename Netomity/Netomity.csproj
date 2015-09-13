@@ -65,7 +65,7 @@
     <Compile Include="Interfaces\Basic\TCPServer.cs" />
     <Compile Include="Core\Command.cs" />
     <Compile Include="Core\CommandType.cs" />
-    <Compile Include="Interfaces\HA\HABase.cs" />
+    <Compile Include="Interfaces\HA\HAInterface.cs" />
     <Compile Include="Interfaces\HA\Insteon.cs" />
     <Compile Include="Interfaces\HA\SendParams.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

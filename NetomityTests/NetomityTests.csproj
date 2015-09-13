@@ -64,7 +64,7 @@
     <Compile Include="Interfaces\Basic\TCPServerTests.cs" />
     <Compile Include="Interfaces\Basic\BasicConnectorTests.cs" />
     <Compile Include="Interfaces\HA\InsteonTests.cs" />
-    <Compile Include="Interfaces\HA\HABaseTests.cs" />
+    <Compile Include="Interfaces\HA\HAInterfaceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\Conversions.cs" />
   </ItemGroup>

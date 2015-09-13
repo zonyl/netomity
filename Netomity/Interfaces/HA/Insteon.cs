@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Netomity.Interfaces.HA
 {
-    public class Insteon: HABase
+    public class Insteon: HAInterface
     {
         private BasicInterface _i;
 
@@ -55,10 +55,10 @@ namespace Netomity.Interfaces.HA
             failResponse.Add(0x15);
 
             Send(new SendParams(){
-                    SendData = bCommand,
-                    SuccessResponse = succesResponse.ToArray(),
-                    FailureResponse = failResponse.ToArray(),
-                    Timeout = 2
+                    SendData = aCommand,
+                    SuccessResponse = aCommand + 0x06,
+                    FailureResponse = aCommand + 0x15,
+                    Timeout = 2000
                 }
             );
             

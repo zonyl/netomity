@@ -8,9 +8,9 @@ namespace Netomity.Interfaces.HA
 {
     public class SendParams
     {
-        public byte[] SendData { get; set; }
-        public byte[] SuccessResponse { get; set; }
-        public byte[] FailureResponse { get; set; }
+        public string SendData { get; set; }
+        public string SuccessResponse { get; set; }
+        public string FailureResponse { get; set; }
         public int Timeout { get; set; }
     }
 }
