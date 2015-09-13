@@ -34,10 +34,21 @@ namespace Netomity.Interfaces.HA
         {
             _interface = basicInterface;
             _receivedData = new ConcurrentQueue<string>();
+            _outgoingCommandQueueDetail = new Dictionary<Guid, CommandQueueDetail>();
 
             _interface.DataReceived += _DataReceived;
             Log("Initialized");
-            _taskDispatch = Task.Factory.StartNew(() => { Dispatch(); });
+            _taskDispatch = Task.Factory.StartNew(() => {
+                try
+                {
+                    Dispatch();
+                }
+                catch (Exception ex)
+                {
+                    Log(ex);
+                }
+            }
+            );
 
         }
 
@@ -69,8 +80,6 @@ namespace Netomity.Interfaces.HA
 
             Log("Queueing command");
             _outgoingCommandQueueDetail[commandId] = commandQueueDetail;
-
-            _outgoingCommandQueue.Enqueue(commandId);
 
             if (sp.SuccessResponse == null && sp.FailureResponse == null)
                 return true;
