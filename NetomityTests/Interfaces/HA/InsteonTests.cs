@@ -69,4 +69,25 @@ namespace NetomityTests.Interfaces
             Thread.Sleep(10000);
         }
     }
+
+//    Debug:HA Interface Received: >P2z4\0\0Ë< (0250327A34000004CB1304)
+//Debug:Queueing command
+//Debug:Waiting Results
+//Debug:Waiting
+//Debug:HA Interface Sending: >b8.¢\0< (0262382EA20F1300)
+//Debug:Sent: b8.¢\0
+//Debug:Received: b8.¢\0
+//Debug:HA Interface Received: >b8.¢\0< (0262382EA20F130006)
+//Debug:Received: P2z4\0\0Ã
+//Debug:HA Interface Received: >P2z4\0\0Ã< (0250327A34000004C31304)
+//Debug:Received: P2z4ÓA
+//Debug:HA Interface Received: >P2z4ÓA< (0250327A3418D380411304)
+//Debug:Received: P2z4ÓF
+//Debug:HA Interface Received: >P2z4ÓF< (0250327A3418D380461304)
+//Debug:Received: P2z4Ë\0
+//Debug:HA Interface Received: >P2z4Ë\0< (0250327A34130104CB0600)
+//Debug:Received: P2z4Ë\0
+//Debug:HA Interface Received: >P2z4Ë\0< (0250327A34130104CB0600)
+//Debug:Timeout Of Command: b8.¢\0
+
 }

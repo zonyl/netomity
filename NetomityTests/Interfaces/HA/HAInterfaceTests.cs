@@ -5,6 +5,7 @@ using Netomity.Interfaces.HA;
 using Netomity.Utility;
 using System.Diagnostics;
 using System.Threading;
+using Netomity.Interfaces;
 
 namespace NetomityTests.Interfaces.HA
 {
@@ -106,5 +107,43 @@ namespace NetomityTests.Interfaces.HA
             Assert.IsTrue(s.ElapsedMilliseconds < 2000);
             Assert.AreEqual(0, _ha.ReceiveQueue.Count);
         }
+
+        [TestMethod]
+        public void OnCommandTests()
+        {
+            _ha.OnCommand(address: null, callback: _OnCommandData);
+            Thread.Sleep(1000);
+            _ha._DataReceived("on");
+            Thread.Sleep(2000);
+            //Thread.Sleep(200000);
+            Assert.AreEqual("on", _data.ToLower());
+        }
+
+        public void _OnCommandData(Command command)
+        {
+            _data = command.Type.ToString();
+
+        }
+
+        [TestMethod]
+        public void OnCommandActionTests()
+        {
+            _ha.OnCommand(address: null, action: (X) => _OnCommandData(X)) ;
+            Thread.Sleep(1000);
+            _ha._DataReceived("on");
+            Thread.Sleep(2000);
+            //Thread.Sleep(200000);
+            Assert.AreEqual("on", _data.ToLower());
+        }
     }
+
+
+//    Debug:HA Interface Sending: >b8.¢\0< (0262382EA20F1300)
+//Debug:Sent: b8.¢\0
+//Debug:Received: b8.
+//Debug:HA Interface Received: >b8.< (0262382E)
+//Debug:Received: ¢\0
+//Debug:HA Interface Received: >¢\0< (A20F130006)
+//Debug:Received Something in Queue: 0262382E 0262382EA20F130006 0262382EA20F130015
+//Debug:Received Something in Queue: A20F130006 0262382EA20F130006 0262382EA20F130015
 }

@@ -9,9 +9,11 @@ using Netomity.Utility;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace Netomity.Interfaces.HA
 {
+
     public class HAInterface: NetomityObject
     {
         protected BasicInterface _interface = null;
@@ -19,6 +21,8 @@ namespace Netomity.Interfaces.HA
         protected ConcurrentQueue<string> _receivedMessages = null;
         protected Dictionary<Guid, CommandQueueDetail> _outgoingCommandQueueDetail = null;
         protected Task _taskDispatch = null;
+        protected List<Tuple<string, OnCommandCallBack>> _OnCommandList = null;
+        protected List<Tuple<string, Action<Command>>> _OnCommandListA = null;
 
         private const int SEND_RETRIES = 3;
 
@@ -35,6 +39,8 @@ namespace Netomity.Interfaces.HA
             _interface = basicInterface;
             _receivedData = new ConcurrentQueue<string>();
             _outgoingCommandQueueDetail = new Dictionary<Guid, CommandQueueDetail>();
+            _OnCommandList = new List<Tuple<string, OnCommandCallBack>>();
+            _OnCommandListA = new List<Tuple<string, Action<Command>>>();
 
             _interface.DataReceived += _DataReceived;
             Log("Initialized");
@@ -54,7 +60,9 @@ namespace Netomity.Interfaces.HA
 
         public virtual void _DataReceived(string data)
         {
-            Log(data);
+            Log(String.Format("HA Interface Received: >{0}< ({1})",
+                data,
+                Conversions.AsciiToHex(data)));
             _receivedData.Enqueue(data);
         }
 
@@ -87,12 +95,13 @@ namespace Netomity.Interfaces.HA
             Log("Waiting Results");
             return await Task.Run(() =>
             {
+                var success = false;
                 Log("Waiting");
                 commandResponseEvent.WaitOne();
                 if (commandQueueDetail.Status == CommandStatus.Success)
-                    return true;
-                else
-                    return false;
+                    success = true;
+                _outgoingCommandQueueDetail.Remove(commandId);
+                return success;
             });
 
         }
@@ -114,24 +123,58 @@ namespace Netomity.Interfaces.HA
             string data;
             if (_receivedData.TryDequeue(out data))
             {
-                foreach (var key in _outgoingCommandQueueDetail.Keys)
-                {
-                    var commandDetail = _outgoingCommandQueueDetail[key];
-                    if (commandDetail.Success == data)
-                    {
-                        Log("Success");
-                        commandDetail.Status = CommandStatus.Success;
-                        commandDetail.CommandResponseEvent.Set();
-                    }
-                    if (commandDetail.Failure == data)
-                    {
-                        Log("Failure");
-                        commandDetail.Status = CommandStatus.Failure;
-                        commandDetail.CommandResponseEvent.Set();
-                    }
-
-                }
+                if (!DispatchIncomingExpected(data))
+                    DispatchIncomingUnexpected(data);
             }
+        }
+
+        private bool DispatchIncomingExpected(string data)
+        {
+
+            foreach (var key in _outgoingCommandQueueDetail.Keys)
+            {
+                var commandDetail = _outgoingCommandQueueDetail[key];
+                Log(String.Format("Received Something in Queue: {0} {1} {2}",
+                    Conversions.AsciiToHex(data),
+                    Conversions.AsciiToHex(commandDetail.Success),
+                    Conversions.AsciiToHex(commandDetail.Failure)
+                    ));
+                if (commandDetail.Success == data)
+                {
+                    Log("Success");
+                    commandDetail.Status = CommandStatus.Success;
+                    commandDetail.CommandResponseEvent.Set();
+                    return true;
+                }
+                if (commandDetail.Failure == data)
+                {
+                    Log("Failure");
+                    commandDetail.Status = CommandStatus.Failure;
+                    commandDetail.CommandResponseEvent.Set();
+                    return true;
+                }
+
+            }
+            return false;
+        }
+
+        public virtual void DispatchIncomingUnexpected(string data)
+        {
+            var command = _DataToCommand(data);
+
+            var delegates = _OnCommandList.Where(x => x.Item1 == command.Destination || x.Item1 == null).ToList();
+            delegates.ForEach(x => x.Item2(command));
+            var delegatesA = _OnCommandListA.Where(x => x.Item1 == command.Destination || x.Item1 == null).ToList();
+            delegatesA.ForEach(x => x.Item2(command));
+
+        }
+
+        private Command _DataToCommand(string data)
+        {
+            if (data.ToLower() == CommandType.On.ToString().ToLower())
+                return new Command() { Type = CommandType.On, Destination = null };
+            else
+                return new Command() { Type = CommandType.Off, Destination = null };
         }
 
         private void DispatchOutgoing()
@@ -140,7 +183,9 @@ namespace Netomity.Interfaces.HA
                 .Where((x) => x.Status == CommandStatus.Pending);
             foreach (var outgoing in outgoingList)
             {
-                Log(String.Format("Sending Command: {0}", outgoing.Command));
+                Log(String.Format("HA Interface Sending: >{0}< ({1})",
+                    outgoing.Command,
+                    Conversions.AsciiToHex(outgoing.Command)));
                 _interface.Send(outgoing.Command);
                 outgoing.OriginalSentTime = DateTime.Now;
                 outgoing.Status = CommandStatus.Sent;
@@ -162,16 +207,18 @@ namespace Netomity.Interfaces.HA
             }
         }
 
-        private void ProcessIncoming(string data)
-        {
-            Log(String.Format(
-                "Unexpected Incoming Data: >{0}<",
-                data)
-                );
+        public delegate void OnCommandCallBack(Command command);
 
+        public void OnCommand(string address, OnCommandCallBack callback )
+        {
+            _OnCommandList.Add(new Tuple<string, OnCommandCallBack>( address, callback ));
 
         }
 
+        public void OnCommand(string address, Action<Command> action)
+        {
+            _OnCommandListA.Add(new Tuple<string, Action<Command>>(address, action));
+        }
     }
 
     public class CommandQueueDetail

@@ -54,13 +54,16 @@ namespace Netomity.Interfaces.HA
             var failResponse = lCommand;
             failResponse.Add(0x15);
 
-            Send(new SendParams(){
+            var response = Send(new SendParams(){
                     SendData = aCommand,
-                    SuccessResponse = aCommand + 0x06,
-                    FailureResponse = aCommand + 0x15,
+                    SuccessResponse = aCommand + Conversions.HexToAscii("06"),
+                    FailureResponse = aCommand + Conversions.HexToAscii("15"),
                     Timeout = 2000
                 }
             );
+
+            Log(String.Format("Command Status: {0}", response.Result));
+
             
         }
 
