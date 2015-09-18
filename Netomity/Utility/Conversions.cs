@@ -11,9 +11,16 @@ namespace Netomity.Utility
     {
         public static string BytesToHex(byte[] ba)
         {
-            StringBuilder hex = new StringBuilder(ba.Length * 2);
+            var hex = new StringBuilder(ba.Length * 2);
             foreach (byte b in ba)
             hex.AppendFormat("{0:x2}", b);
+            return hex.ToString();
+        }
+
+        public static string BytesToHex(byte ba)
+        {
+            var hex = new StringBuilder(2);
+            hex.AppendFormat("{0:x2}", ba);
             return hex.ToString();
         }
 
@@ -65,6 +72,11 @@ namespace Netomity.Utility
         {
             var r = ascii.Select(c => (byte)c).ToArray();
             return r; 
+        }
+
+        internal static int BytesToInt(byte b)
+        {
+            return (int)b;
         }
     }
 }

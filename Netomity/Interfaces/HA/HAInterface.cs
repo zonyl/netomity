@@ -9,7 +9,6 @@ using Netomity.Utility;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Threading;
-using System.Collections.Generic;
 
 namespace Netomity.Interfaces.HA
 {
@@ -18,7 +17,8 @@ namespace Netomity.Interfaces.HA
     {
         protected BasicInterface _interface = null;
         protected ConcurrentQueue<string> _receivedData = null;
-        protected ConcurrentQueue<string> _receivedMessages = null;
+        protected string _receivedBuffer = null;
+        protected DateTime? _receivedStart = null;
         protected Dictionary<Guid, CommandQueueDetail> _outgoingCommandQueueDetail = null;
         protected Task _taskDispatch = null;
         protected List<Tuple<string, OnCommandCallBack>> _OnCommandList = null;
@@ -63,6 +63,7 @@ namespace Netomity.Interfaces.HA
             Log(String.Format("HA Interface Received: >{0}< ({1})",
                 data,
                 Conversions.AsciiToHex(data)));
+            
             _receivedData.Enqueue(data);
         }
 
@@ -114,18 +115,41 @@ namespace Netomity.Interfaces.HA
                 DispatchIncoming();
                 DispatchOutgoing();
                 DispatchOutgoingTimeouts();
-                Thread.Sleep(100);
+                Thread.Sleep(50);
             }
         }
 
         private void DispatchIncoming()
         {
+            TimeSpan deadTime = new TimeSpan(0,0,0,0,300);
+
+            var currentTime = DateTime.Now;
+
             string data;
-            if (_receivedData.TryDequeue(out data))
+            //if (_receivedData.TryDequeue(out data))
+            //{
+            //    _receivedBuffer += data;
+            //    _receivedStart = currentTime;
+
+            //}
+            while (_receivedData.TryDequeue(out data))
             {
-                if (!DispatchIncomingExpected(data))
-                    DispatchIncomingUnexpected(data);
+                _receivedBuffer += data;
+                _receivedStart = currentTime;
+
             }
+
+            if (_receivedBuffer != null &&
+                _receivedStart != null &&
+                currentTime - _receivedStart >= deadTime)
+            {
+                if (!DispatchIncomingExpected(_receivedBuffer))
+                    DispatchIncomingUnexpected(_receivedBuffer);
+                _receivedStart = null;
+                _receivedBuffer = null;
+            }                    
+
+
         }
 
         private bool DispatchIncomingExpected(string data)
@@ -160,21 +184,32 @@ namespace Netomity.Interfaces.HA
 
         public virtual void DispatchIncomingUnexpected(string data)
         {
-            var command = _DataToCommand(data);
+            var commands = _DataToCommands(data);
 
-            var delegates = _OnCommandList.Where(x => x.Item1 == command.Destination || x.Item1 == null).ToList();
-            delegates.ForEach(x => x.Item2(command));
-            var delegatesA = _OnCommandListA.Where(x => x.Item1 == command.Destination || x.Item1 == null).ToList();
-            delegatesA.ForEach(x => x.Item2(command));
+            foreach (var command in commands)
+            {
+                var delegates = _OnCommandList.Where(x => x.Item1 == null 
+                    || command.Source == null
+                    || x.Item1.ToLower() == command.Source.ToLower() ).ToList();
+                delegates.ForEach(x => x.Item2(command));
+                var delegatesA = _OnCommandListA.Where(x => x.Item1 == null 
+                    || command.Source == null
+                    || x.Item1.ToLower() == command.Source.ToLower()).ToList();
+                delegatesA.ForEach(x => x.Item2(command));
+            }
 
         }
 
-        private Command _DataToCommand(string data)
+        protected virtual List<Command> _DataToCommands(string data)
         {
+            var commands = new List<Command>();
+
             if (data.ToLower() == CommandType.On.ToString().ToLower())
-                return new Command() { Type = CommandType.On, Destination = null };
+                commands.Add( new Command() { Type = CommandType.On, Source = null });
             else
-                return new Command() { Type = CommandType.Off, Destination = null };
+                commands.Add( new Command() { Type = CommandType.Off, Source = null });
+
+            return commands;
         }
 
         private void DispatchOutgoing()
@@ -209,15 +244,23 @@ namespace Netomity.Interfaces.HA
 
         public delegate void OnCommandCallBack(Command command);
 
-        public void OnCommand(string address, OnCommandCallBack callback )
+        public void OnCommand(string source, OnCommandCallBack callback )
         {
-            _OnCommandList.Add(new Tuple<string, OnCommandCallBack>( address, callback ));
+            _OnCommandList.Add(new Tuple<string, OnCommandCallBack>( source, callback ));
 
         }
 
-        public void OnCommand(string address, Action<Command> action)
+        public void OnCommand(string source, Action<Command> action)
         {
-            _OnCommandListA.Add(new Tuple<string, Action<Command>>(address, action));
+            _OnCommandListA.Add(new Tuple<string, Action<Command>>(source, action));
+        }
+
+        public virtual async Task<bool> Command(Command command)
+        {
+            return await Send(new SendParams()
+            {
+                SendData = command.Type.ToString(),
+            });
         }
     }
 

@@ -19,7 +19,7 @@ namespace Netomity.Devices
             _iface = iface;
             _address = address;
 
-            _iface.OnCommand(address: _address, action: _CommandReceived);
+            _iface.OnCommand(source: _address, action: _CommandReceived);
         }
 
         private void _CommandReceived(Command command)

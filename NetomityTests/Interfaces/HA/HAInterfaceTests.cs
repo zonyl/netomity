@@ -20,6 +20,7 @@ namespace NetomityTests.Interfaces.HA
         [TestInitialize]
         public void SetUp()
         {
+            _data = null;
             _t = new Netomity.Interfaces.Basic.Fakes.StubBasicInterface()
             {
                 SendString = (data) => { _data = data; },
@@ -82,6 +83,18 @@ namespace NetomityTests.Interfaces.HA
             Assert.AreEqual(0, _ha.ReceiveQueue.Count);
         }
 
+        [TestMethod]
+        public void SendSyncGoodPartialTest()
+        {
+            _sp.Timeout = 10000;
+            var result = _ha.Send(_sp);
+            _ha._DataReceived("asdf");
+            _ha._DataReceived("good");
+            //Thread.Sleep(100000);
+            Assert.IsTrue(result.Result);
+            Assert.AreEqual(0, _ha.ReceiveQueue.Count);
+        }
+
 
         [TestMethod]
         public void SendSyncGoodNoiseTest()
@@ -89,6 +102,7 @@ namespace NetomityTests.Interfaces.HA
             _sp.Timeout = 2000;
             var result = _ha.Send(_sp);
             _ha._DataReceived("asdfasdfasdf");
+            Thread.Sleep(360);
             _ha._DataReceived("asdfgood");
             Assert.IsTrue(result.Result);
             Assert.AreEqual(0, _ha.ReceiveQueue.Count);
@@ -111,7 +125,7 @@ namespace NetomityTests.Interfaces.HA
         [TestMethod]
         public void OnCommandTests()
         {
-            _ha.OnCommand(address: null, callback: _OnCommandData);
+            _ha.OnCommand(source: null, callback: _OnCommandData);
             Thread.Sleep(1000);
             _ha._DataReceived("on");
             Thread.Sleep(2000);
@@ -128,12 +142,24 @@ namespace NetomityTests.Interfaces.HA
         [TestMethod]
         public void OnCommandActionTests()
         {
-            _ha.OnCommand(address: null, action: (X) => _OnCommandData(X)) ;
+            _ha.OnCommand(source: null, action: (X) => _OnCommandData(X)) ;
             Thread.Sleep(1000);
             _ha._DataReceived("on");
             Thread.Sleep(2000);
             //Thread.Sleep(200000);
             Assert.AreEqual("on", _data.ToLower());
+        }
+
+        [TestMethod]
+        public void CommandTests()
+        {
+            var result = _ha.Command(new Command() { Type = CommandType.On }).Result;
+            // We arent expecting a success or failure response so we need to wait for async
+            // to catch up.
+            Thread.Sleep(1000);
+            Assert.AreEqual(CommandType.On.ToString(), _data);
+
+
         }
     }
 

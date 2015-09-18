@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Netomity.Interfaces.HA
 {
@@ -19,17 +20,14 @@ namespace Netomity.Interfaces.HA
                 { CommandType.Off, new Tuple<byte, byte, byte>(0x62,0x13,0x00)},
             };
 
-        public Insteon(BasicInterface basicInterface) : base(basicInterface: basicInterface)
+        public Insteon(BasicInterface basicInterface)
+            : base(basicInterface: basicInterface)
         {
 
         }
 
-        public void _DataReceived(string data)
-        {
-            base._DataReceived(data);
-        }
 
-        public void Command(Command command)
+        public virtual async Task<bool> Command(Command command)
         {
             var bAddress = Conversions.HexToBytes(command.Destination);
             var commandLookup = _CommandLookup[command.Type];
@@ -54,7 +52,7 @@ namespace Netomity.Interfaces.HA
             var failResponse = lCommand;
             failResponse.Add(0x15);
 
-            var response = Send(new SendParams(){
+            var response = await Send(new SendParams(){
                     SendData = aCommand,
                     SuccessResponse = aCommand + Conversions.HexToAscii("06"),
                     FailureResponse = aCommand + Conversions.HexToAscii("15"),
@@ -62,11 +60,63 @@ namespace Netomity.Interfaces.HA
                 }
             );
 
-            Log(String.Format("Command Status: {0}", response.Result));
-
+            Log(String.Format("Command Status: {0}", response));
+            return response;
             
         }
+        protected override List<Command> _DataToCommands(string data)
+        {
+            var commands = new List<Command>();
+            var dataB = Conversions.AsciiToBytes(data);
 
+            var command = new Command();
+            if (dataB[0] == 0x02)
+                //Incoming Standard Message
+                if (dataB[1] == 0x50)
+                {
+                    command.Source = Conversions.BytesToHex(dataB[2])
+                        + "." + Conversions.BytesToHex(dataB[3])
+                        + "." + Conversions.BytesToHex(dataB[4]);
+                    command.Destination = Conversions.BytesToHex(dataB[5])
+                        + "." + Conversions.BytesToHex(dataB[6])
+                        + "." + Conversions.BytesToHex(dataB[7]);
+                    var messageType = _MessageType(dataB[8]);
+                    command.Type = _CommandType(dataB[9]);
+                    command.SubCommand = Conversions.BytesToInt(dataB[10]).ToString();
+                    if (command.Type != null 
+                            && ( messageType == InsteonMessageType.Broadcast
+                            || messageType == InsteonMessageType.Direct
+                            || messageType == InsteonMessageType.BroadCastLinkAll
+                            ))
+                        commands.Add(command);
+                }
+
+            return commands;
+        }
+
+        private CommandType _CommandType(byte b1)
+        {
+            var commandType = _CommandLookup.Keys
+                .Where(k => _CommandLookup[k].Item2 == b1);
+            return commandType.FirstOrDefault();
+        }
+
+        private InsteonMessageType _MessageType(byte b)
+        {
+            return (InsteonMessageType)(b & 0xE0);
+        }
+
+        public enum InsteonMessageType
+        {
+            Broadcast = 0x80,
+            Direct = 0x00,
+            DirectAck = 0x20,
+            DirectNak = 0xA0,
+            BroadCastLinkAll = 0xC0,
+            BroadCastLinkClean = 0x40,
+            BroadCastLinkCleanAck = 0x60,
+            BroadCastLinkcleanNak = 0xE0
+        }
     //    private 
     }
 }
