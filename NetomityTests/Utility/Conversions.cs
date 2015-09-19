@@ -40,7 +40,6 @@ namespace NetomityTests.Utility
         public void AsciiToHexForLeadingZeroTests()
         {
             var d = "026219057B0F11FF";
-            var d1 = "02 62 19 05 7B 0F 11 FF";
             var r1 = Conversions.HexToAscii(d);
             var r4 = Conversions.HexToBytes(d);
             var r5 = Conversions.BytesToAscii(r4);

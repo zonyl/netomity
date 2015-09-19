@@ -11,8 +11,6 @@ namespace Netomity.Interfaces.HA
 {
     public class Insteon: HAInterface
     {
-        private BasicInterface _i;
-
         Dictionary<CommandType, Tuple<byte, byte, byte>> _CommandLookup =
             new Dictionary<CommandType, Tuple<byte, byte, byte>>()
             {
@@ -27,10 +25,10 @@ namespace Netomity.Interfaces.HA
         }
 
 
-        public virtual async Task<bool> Command(Command command)
+        public override async Task<bool> Command(Command command)
         {
             var bAddress = Conversions.HexToBytes(command.Destination);
-            var commandLookup = _CommandLookup[command.Type];
+            var commandLookup = _CommandLookup[command.Primary];
             var lCommand = 
                 new List<byte>() {
                     0x02,
@@ -81,9 +79,9 @@ namespace Netomity.Interfaces.HA
                         + "." + Conversions.BytesToHex(dataB[6])
                         + "." + Conversions.BytesToHex(dataB[7]);
                     var messageType = _MessageType(dataB[8]);
-                    command.Type = _CommandType(dataB[9]);
-                    command.SubCommand = Conversions.BytesToInt(dataB[10]).ToString();
-                    if (command.Type != null 
+                    command.Primary = _CommandType(dataB[9]);
+                    command.Secondary = Conversions.BytesToInt(dataB[10]).ToString();
+                    if (command.Primary != null 
                             && ( messageType == InsteonMessageType.Broadcast
                             || messageType == InsteonMessageType.Direct
                             || messageType == InsteonMessageType.BroadCastLinkAll

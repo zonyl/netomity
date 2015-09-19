@@ -40,7 +40,7 @@ namespace NetomityTests.Interfaces
             var aSentData = Conversions.HexToAscii(sentData);
             var result = _i.Command(new Command()
             {
-                Type = CommandType.On,
+                Primary = CommandType.On,
                 Destination = "19.05.7b"
 
             });
@@ -61,7 +61,7 @@ namespace NetomityTests.Interfaces
             _i._DataReceived(Conversions.HexToAscii("0250327A34000001CB1101"));
             Thread.Sleep(2000);
             Assert.IsNotNull(command);
-            Assert.AreEqual(command.Type, CommandType.On);
+            Assert.AreEqual(command.Primary, CommandType.On);
             Assert.AreEqual(command.Source, "32.7a.34");
 
 
@@ -80,7 +80,7 @@ namespace NetomityTests.Interfaces
             //var aSentData = Conversions.HexToAscii(sentData);
             i.Command(new Command()
             {
-                Type = CommandType.Off,
+                Primary = CommandType.Off,
                 Destination = "38.2E.A2"
 
             });

@@ -69,7 +69,6 @@ namespace Netomity.Interfaces.HA
 
         public async Task<bool> Send(SendParams sp)
         {
-            string data;
 
             var commandResponseEvent = new AutoResetEvent(false);
             var commandId = Guid.NewGuid();
@@ -205,9 +204,9 @@ namespace Netomity.Interfaces.HA
             var commands = new List<Command>();
 
             if (data.ToLower() == CommandType.On.ToString().ToLower())
-                commands.Add( new Command() { Type = CommandType.On, Source = null });
+                commands.Add( new Command() { Primary = CommandType.On, Source = null });
             else
-                commands.Add( new Command() { Type = CommandType.Off, Source = null });
+                commands.Add( new Command() { Primary = CommandType.Off, Source = null });
 
             return commands;
         }
@@ -244,13 +243,13 @@ namespace Netomity.Interfaces.HA
 
         public delegate void OnCommandCallBack(Command command);
 
-        public void OnCommand(string source, OnCommandCallBack callback )
+        public virtual void OnCommand(string source, OnCommandCallBack callback )
         {
             _OnCommandList.Add(new Tuple<string, OnCommandCallBack>( source, callback ));
 
         }
 
-        public void OnCommand(string source, Action<Command> action)
+        public virtual void OnCommand(string source, Action<Command> action)
         {
             _OnCommandListA.Add(new Tuple<string, Action<Command>>(source, action));
         }
@@ -259,7 +258,7 @@ namespace Netomity.Interfaces.HA
         {
             return await Send(new SendParams()
             {
-                SendData = command.Type.ToString(),
+                SendData = command.Primary.ToString(),
             });
         }
     }

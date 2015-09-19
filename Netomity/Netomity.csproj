@@ -59,6 +59,8 @@
     <Compile Include="Core\NetomitySystem.cs" />
     <Compile Include="Core\NetomityObject.cs" />
     <Compile Include="Core\PeriodicTimer.cs" />
+    <Compile Include="Core\State.cs" />
+    <Compile Include="Core\StateType.cs" />
     <Compile Include="Devices\StateDevice.cs" />
     <Compile Include="Interfaces\Basic\BasicConnector.cs" />
     <Compile Include="Interfaces\Basic\BasicInterface.cs" />

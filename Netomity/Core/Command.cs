@@ -10,7 +10,16 @@ namespace Netomity.Interfaces
     {
         public string Source { get; set; }
         public string Destination { get; set; }
-        public CommandType Type { get; set; }
-        public string SubCommand { get; set; }
+        public CommandType Primary { get; set; }
+        public string Secondary { get; set; }
+
+        public static Command Create(string destination, CommandType type)
+        {
+            return new Command()
+            {
+                Destination = destination,
+                Primary = type
+            };
+        }
     }
 }

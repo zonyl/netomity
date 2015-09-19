@@ -10,9 +10,10 @@ namespace Netomity.Interfaces
     {
         private readonly string _name;
 
-        public static readonly CommandType On = new CommandType("On");
-        public static readonly CommandType Off = new CommandType("Off");
-        public static readonly CommandType Level = new CommandType("Level");
+        public static readonly CommandType Uknown = new CommandType("unknown");
+        public static readonly CommandType On = new CommandType("on");
+        public static readonly CommandType Off = new CommandType("off");
+        public static readonly CommandType Level = new CommandType("level");
 
 
         private CommandType(String name)
@@ -23,5 +24,6 @@ namespace Netomity.Interfaces
         {
             return _name;
         }
+
     }
 }

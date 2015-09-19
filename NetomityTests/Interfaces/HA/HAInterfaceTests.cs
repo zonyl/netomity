@@ -135,7 +135,7 @@ namespace NetomityTests.Interfaces.HA
 
         public void _OnCommandData(Command command)
         {
-            _data = command.Type.ToString();
+            _data = command.Primary.ToString();
 
         }
 
@@ -153,7 +153,7 @@ namespace NetomityTests.Interfaces.HA
         [TestMethod]
         public void CommandTests()
         {
-            var result = _ha.Command(new Command() { Type = CommandType.On }).Result;
+            var result = _ha.Command(new Command() { Primary = CommandType.On }).Result;
             // We arent expecting a success or failure response so we need to wait for async
             // to catch up.
             Thread.Sleep(1000);
