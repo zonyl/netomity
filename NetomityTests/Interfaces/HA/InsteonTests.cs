@@ -5,6 +5,7 @@ using Netomity.Interfaces.HA;
 using Netomity.Utility;
 using Netomity.Interfaces.Basic;
 using System.Threading;
+using Netomity.Core;
 
 namespace NetomityTests.Interfaces
 {

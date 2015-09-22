@@ -70,5 +70,11 @@ namespace NetomityTests.Core
         {
 
         }
+
+        [TestMethod]
+        public void TypeTests()
+        {
+            Assert.AreEqual(NetomityObjectType.Unknown, _no.Type);
+        }
     }
 }

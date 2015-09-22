@@ -6,6 +6,7 @@ using Netomity.Interfaces.Basic;
 using Netomity.Interfaces;
 using System.Threading.Tasks;
 using Netomity.Core;
+using System.Collections.Generic;
 
 namespace NetomityTests.Devices
 {
@@ -114,6 +115,35 @@ namespace NetomityTests.Devices
             });
             Assert.IsNotNull(state);
             Assert.AreEqual(StateType.Off, state.Primary);
+        }
+
+        [TestMethod]
+        public void DeviceInitialUnkownTest()
+        {
+            Assert.AreEqual(StateType.Unknown, _sd.State.Primary);
+        }
+
+        [TestMethod]
+        public void DeviceLinkOnTest()
+        {
+            var sd1 = new StateDevice()
+            {
+                Name = "TestDevice1"
+            };
+            var sd2 = new StateDevice(devices: new List<StateDevice>() { sd1 }) {
+            Name = "TestDevice2"
+            };
+            Assert.AreEqual(StateType.Unknown, sd2.State.Primary);
+            var r = sd1.Command("on");
+
+            Assert.IsTrue(r.Result);
+            Assert.AreEqual(StateType.On, sd2.State.Primary);
+        }
+
+        [TestMethod]
+        public void StateDeviceType()
+        {
+            Assert.AreEqual(NetomityObjectType.Device, _sd.Type);
         }
     }
 }

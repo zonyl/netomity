@@ -31,6 +31,8 @@ namespace Netomity.Core
 
         public string Name { get; set; }
 
+        public NetomityObjectType Type { get; set; }
+
         public List<Task> Tasks
         {
             get
@@ -48,6 +50,7 @@ namespace Netomity.Core
             if (c_tasks == null)
                 c_tasks = new List<Task>();
 
+            Type = NetomityObjectType.Unknown;
             c_objects.Add(this);
 
             if (logger != null)

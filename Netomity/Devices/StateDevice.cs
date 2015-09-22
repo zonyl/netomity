@@ -19,19 +19,34 @@ namespace Netomity.Devices
 
         List<Action<Command>> _commandDelegates = null;
         List<Action<State>> _stateDelegates = null;
+        List<StateDevice> _devices = null;
 
-        public StateDevice(HAInterface iface, string address)
+        public StateDevice(string address=null, HAInterface iface=null, List<StateDevice> devices=null)
         {
+            Type = NetomityObjectType.Device;
             _iface = iface;
             _address = address;
             _commandDelegates = new List<Action<Command>>();
             _stateDelegates = new List<Action<State>>();
 
+            RegisterDevices(devices);
+
             _state = new State(){
                 Primary = StateType.Unknown
             };
 
-            _iface.OnCommand(source: _address, action: _CommandReceived);
+            if(_iface !=null)
+                _iface.OnCommand(source: _address, action: _CommandReceived);
+        }
+
+        private void RegisterDevices(List<StateDevice> devices)
+        {
+            if (devices != null)
+                _devices = devices;
+            else
+                _devices = new List<StateDevice>();
+
+            _devices.ForEach(d => d.OnCommand((c) => { _CommandReceived(c); }));
         }
 
         public State State
@@ -101,10 +116,20 @@ namespace Netomity.Devices
             };
         }
 
-        public Task<bool> Command(Command command)
+        public async Task<bool> Command(Command command)
         {
+            bool isSent;
             Log(String.Format("Sending command to interface: {0}", command.Primary.ToString()));
-            return _iface.Command(command);
+            if (_iface != null)
+                isSent = await _iface.Command(command);
+            else
+            {
+                Log("Command issued however no interface");
+                isSent = true;
+            }
+            _CommandReceived(command);
+            return isSent;
+
         }
 
         public Task<bool> Command(CommandType commandT, string secondary=null)
