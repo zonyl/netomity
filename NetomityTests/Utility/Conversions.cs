@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Netomity.Utility;
+using Netomity.Core;
 
 namespace NetomityTests.Utility
 {
@@ -54,6 +55,13 @@ namespace NetomityTests.Utility
             var d = "026219057B0F11FF";
             var r1 = Conversions.HexToBytes(d);
             Assert.AreEqual(0xff, r1[7]);
+        }
+
+        [TestMethod]
+        public void ValueToStringEnumTest()
+        {
+            var st = Conversions.ValueToStringEnum<CommandType>(CommandType.On.ToString());
+            Assert.AreEqual(CommandType.On, st);
         }
     }
 }

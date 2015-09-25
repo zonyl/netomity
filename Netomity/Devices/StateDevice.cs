@@ -4,11 +4,13 @@ using Netomity.Interfaces.HA;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Netomity.Devices
 {
+    [DataContract]
     public class StateDevice: NetomityObject
     {
         HAInterface _iface = null;
@@ -49,6 +51,7 @@ namespace Netomity.Devices
             _devices.ForEach(d => d.OnCommand((c) => { _CommandReceived(c); }));
         }
 
+        [DataMember]
         public State State
         {
             get

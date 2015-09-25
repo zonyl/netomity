@@ -1,17 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Netomity.Core
 {
+    [DataContract]
     public abstract class NetomityObject : INetomityObject
     {
         public static List<NetomityObject> c_objects = null;
         public static List<Task> c_tasks = new List<Task>();
         static internal Logger c_logger = null;
         internal Logger _logger = null;
+        public int Id
+        {
+            get
+            {
+                var baseString = Type.ToString() + Name + c_objects.Count().ToString();
+                return baseString.GetHashCode();
+            }
+        }
         public Logger Logger
         {
             get
@@ -28,9 +38,9 @@ namespace Netomity.Core
                     _logger = value;
             }
         }
-
+        [DataMember]
         public string Name { get; set; }
-
+        [DataMember]
         public NetomityObjectType Type { get; set; }
 
         public List<Task> Tasks

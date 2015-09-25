@@ -78,5 +78,19 @@ namespace Netomity.Utility
         {
             return (int)b;
         }
+
+        public static T ValueToStringEnum<T>(string value)
+        {
+            T e = default(T);
+            foreach (var fieldS in typeof(T).GetFields())
+            {
+                if (fieldS.GetValue(null).ToString().ToLower() == value.ToLower())
+                {
+                    e = (T)fieldS.GetValue(null);
+                    break;
+                }
+            }
+            return e;
+        }
     }
 }

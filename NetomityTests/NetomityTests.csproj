@@ -68,6 +68,7 @@
     <Compile Include="Interfaces\HA\HAInterfaceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\Conversions.cs" />
+    <Compile Include="Web\RestHostTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Netomity\Netomity.csproj">

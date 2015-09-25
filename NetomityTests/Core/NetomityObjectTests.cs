@@ -76,5 +76,20 @@ namespace NetomityTests.Core
         {
             Assert.AreEqual(NetomityObjectType.Unknown, _no.Type);
         }
+
+        [TestMethod]
+        public void IDHashTest()
+        {
+            var firstHash = _no.Id;
+            Assert.IsTrue(firstHash != 0);
+            Assert.AreEqual(1484075203, firstHash);
+            var secondHash = new NetomityObjectTestObj().Id;
+            Assert.AreNotEqual(firstHash, secondHash);
+
+            _no.Name = "Test Object Hash";
+            var thirdHash = _no.Id;
+            Assert.AreNotEqual(firstHash, thirdHash);
+
+        }
     }
 }
