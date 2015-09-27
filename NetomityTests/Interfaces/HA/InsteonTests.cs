@@ -25,7 +25,7 @@ namespace NetomityTests.Interfaces
                 SendString = (data) => { _data = data;  },
             };
 
-            _i = new Insteon(basicInterface: _t);
+            _i = new Insteon(iface: _t);
         }
 
         [TestMethod]
@@ -72,9 +72,9 @@ namespace NetomityTests.Interfaces
         [TestMethod]
         public void CommandOnFunctionalTests1()
         {
-            var t = new TCPClient(hostName: "192.168.12.161", port: 3333);
-            var i = new Insteon(basicInterface: t);
-            t.Open();
+            var t = new TCPClient(address: "192.168.12.161", port: 3333);
+            var i = new Insteon(iface: t);
+            //t.Open();
             Thread.Sleep(2000);
             //var sentData = "026219057B0F11FF";
                     //        0262382E3F0F113F

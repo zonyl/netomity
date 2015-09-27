@@ -16,7 +16,7 @@ namespace NetomityTests.Interfaces.Basic
         [TestInitialize]
         public void SetUp()
         {
-            _tcp = new TCPClient(hostName: "127.0.0.1", port: 2222) { Name = "Client 1" };
+            _tcp = new TCPClient(address: "127.0.0.1", port: 2222) { Name = "Client 1" };
         }
 
         [TestMethod]

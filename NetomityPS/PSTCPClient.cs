@@ -43,7 +43,7 @@ namespace NetomityPS
         protected override void ProcessRecord()
         {
             WriteVerbose(String.Format("TCPClient - Port:{0}", PortNumber));
-            WriteObject(new TCPClient(hostName: Address, port: PortNumber) { Name = Name });
+            WriteObject(new TCPClient(address: Address, port: PortNumber) { Name = Name });
         }
     }
 }

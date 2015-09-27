@@ -28,7 +28,7 @@ namespace NetomityTests.Interfaces.HA
                 DataReceivedEvent = (ev) => { _t._DataReceived(ev); },
             };
 
-            _ha = new HAInterface(basicInterface: _t);
+            _ha = new HAInterface(iface: _t);
             _sp = new SendParams()
             {
                 SendData = "asdf",

@@ -15,9 +15,9 @@ namespace Netomity.Web
         private string _url = null;
         ServiceHost _host = null;
 
-        public RestHost(string baseUrl = BASE_URL )
+        public RestHost(string address = BASE_URL )
         {
-            _url = baseUrl;
+            _url = address;
             Open();
         }
 

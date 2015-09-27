@@ -40,12 +40,13 @@ namespace NetomityTests.Interfaces.Basic
         public void DoubleConnectTest()
         {
             _tcp.DataReceived += DoubleConnectMethod;
-            _tcp.Open();
+            //_tcp.Open();
             var client1 = new TCPClient("127.0.0.1", 13000);
-            client1.Open();
+            //client1.Open();
             client1.Send("asdf1\n");
             Thread.Sleep(1000);
             client1.Close();
+            Assert.AreEqual("asdf1\n", _msg);
             Thread.Sleep(1000);
             client1.Open();
             Thread.Sleep(1000);

@@ -14,14 +14,19 @@ namespace Netomity.Interfaces.Basic
         {
             if (logger != null)
                 _logger = logger;
+            _Initialize();
+
         }
 
         public BasicInterface()
         {
-
+            _Initialize();
         }
 
-
+        protected void _Initialize()
+        {
+            Open();
+        }
 
         public abstract event DataReceivedHandler DataReceived;
         public abstract bool IsOpen { get; }

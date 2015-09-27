@@ -35,6 +35,8 @@ namespace Netomity.Interfaces.Basic
                 Address = IPAddress.Any;
             else
                 Address = IPAddress.Parse(address);
+
+            _Initialize();
         }
 
         public override async Task Open()
@@ -42,33 +44,35 @@ namespace Netomity.Interfaces.Basic
 
         // Set the TcpListener on port 13000.
             Int32 port = Port;
-
-            try
+            if (!IsOpen)
             {
-                // TcpListener server = new TcpListener(port);
-                _server = new TcpListener(Address, port);
-
-                // Start listening for client requests.
-                _server.Start();
-
-                while (true)
+                try
                 {
-                    try
+                    // TcpListener server = new TcpListener(port);
+                    _server = new TcpListener(Address, port);
+
+                    // Start listening for client requests.
+                    _server.Start();
+
+                    while (true)
                     {
-                        Log(message: "Waiting for Connections");
-                        TcpClient tcpClient = await _server.AcceptTcpClientAsync();
-                        Task t = ProcessRequest(tcpClient);
-                        await t;
-                    }
-                    catch (Exception ex)
-                    {
-                        Log(ex);
+                        try
+                        {
+                            Log(message: "Waiting for Connections");
+                            TcpClient tcpClient = await _server.AcceptTcpClientAsync();
+                            Task t = ProcessRequest(tcpClient);
+                            await t;
+                        }
+                        catch (Exception ex)
+                        {
+                            Log(ex);
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Log(ex);
+                catch (Exception ex)
+                {
+                    Log(ex);
+                }
             }
         }   
 
@@ -141,6 +145,7 @@ namespace Netomity.Interfaces.Basic
         public override void Close()
         {
             _server.Stop();
+            _server = null;
         }
     }
 }

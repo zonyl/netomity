@@ -72,8 +72,8 @@ namespace Netomity.Devices
             newState = CommandToState(command);
             if (newState.Primary != _state.Primary)
             {
-                Log(String.Format("State Changed: {0}", _state.Primary.ToString()));
                 _state = newState;
+                Log(String.Format("State Changed: {0}", _state.Primary.ToString()));
                 _delegateState(state: _state);
 
             }
@@ -119,18 +119,25 @@ namespace Netomity.Devices
             };
         }
 
-        public async Task<bool> Command(Command command)
+        private async Task<bool> Command(Command command)
         {
-            bool isSent;
+            bool isSent = false;
             Log(String.Format("Sending command to interface: {0}", command.Primary.ToString()));
-            if (_iface != null)
-                isSent = await _iface.Command(command);
-            else
+            try
             {
-                Log("Command issued however no interface");
-                isSent = true;
+                if (_iface != null)
+                    isSent = await _iface.Command(command);
+                else
+                {
+                    Log("Command issued however no interface");
+                    isSent = true;
+                }
+                _CommandReceived(command);
             }
-            _CommandReceived(command);
+            catch (System.Exception ex)
+            {
+                Log(ex);
+            }
             return isSent;
 
         }

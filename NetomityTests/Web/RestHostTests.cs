@@ -4,6 +4,7 @@ using Netomity.Web;
 using System.Threading;
 using Netomity.Devices;
 using System.Net;
+using Netomity.Core;
 
 namespace NetomityTests.Web
 {
@@ -16,7 +17,7 @@ namespace NetomityTests.Web
         [TestInitialize]
         public void SetUp()
         {
-            _rh = new RestHost(baseUrl: BASE_ADDR);
+            _rh = new RestHost(address: BASE_ADDR);
         }
 
         [TestMethod]
@@ -28,6 +29,19 @@ namespace NetomityTests.Web
             WebClient c = new WebClient();
             var r = c.DownloadString(BASE_ADDR + "/objects/device");
             Assert.AreNotEqual("", r);
+        }
+
+        [TestMethod]
+        public void ObjectSetAttributeTest()
+        {
+            var sd1 = new StateDevice();
+            var sd2 = new StateDevice() { Name = "Test Device 2" };
+            Thread.Sleep(1000);
+            Assert.AreEqual(StateType.Unknown, sd2.State.Primary);
+            WebClient c = new WebClient();
+            var r = c.DownloadString(BASE_ADDR + "/object/Test Device 2/Command/On");
+            Assert.AreNotEqual("", r);
+            Assert.AreEqual(StateType.On, sd2.State.Primary);
         }
     }
 }

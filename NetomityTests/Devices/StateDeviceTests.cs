@@ -31,7 +31,7 @@ namespace NetomityTests.Devices
                 SendString = (data) => { _data = data; },
                 DataReceivedEvent = (ev) => { _t._DataReceived(ev); },
             };
-            _ha = new Netomity.Interfaces.HA.Fakes.StubHAInterface(basicInterface: _t)
+            _ha = new Netomity.Interfaces.HA.Fakes.StubHAInterface(iface: _t)
             {
                 CommandCommand = (command) => { _command = command; return null; },
                 OnCommandStringActionOfCommand = (address, action) => {

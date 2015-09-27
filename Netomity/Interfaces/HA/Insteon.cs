@@ -18,8 +18,8 @@ namespace Netomity.Interfaces.HA
                 { CommandType.Off, new Tuple<byte, byte, byte>(0x62,0x13,0x00)},
             };
 
-        public Insteon(BasicInterface basicInterface)
-            : base(basicInterface: basicInterface)
+        public Insteon(BasicInterface iface)
+            : base(iface: iface)
         {
 
         }

@@ -82,6 +82,8 @@
     <Compile Include="Utility\Conversions.cs" />
     <Compile Include="Web\RestAPI.cs" />
     <Compile Include="Web\RestHost.cs" />
+    <Compile Include="Web\RestResponse.cs" />
+    <Compile Include="Web\RestResponseStatusType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

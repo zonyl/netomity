@@ -34,9 +34,9 @@ namespace Netomity.Interfaces.HA
             }
         }
 
-        public HAInterface(BasicInterface basicInterface)
+        public HAInterface(BasicInterface iface)
         {
-            _interface = basicInterface;
+            _interface = iface;
             _receivedData = new ConcurrentQueue<string>();
             _outgoingCommandQueueDetail = new Dictionary<Guid, CommandQueueDetail>();
             _OnCommandList = new List<Tuple<string, OnCommandCallBack>>();
