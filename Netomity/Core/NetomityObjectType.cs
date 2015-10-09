@@ -14,6 +14,7 @@ namespace Netomity.Core
         public static readonly NetomityObjectType Unknown = new NetomityObjectType("unknown");
         public static readonly NetomityObjectType Device = new NetomityObjectType("device");
         public static readonly NetomityObjectType Interface = new NetomityObjectType("interface");
+        public static readonly NetomityObjectType Scene = new NetomityObjectType("scene");
 
 
         private NetomityObjectType(String name)

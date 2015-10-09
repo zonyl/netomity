@@ -22,23 +22,41 @@ namespace Netomity.Devices
         List<Action<Command>> _commandDelegates = null;
         List<Action<State>> _stateDelegates = null;
         List<StateDevice> _devices = null;
+        List<Command> _commandsAvailable = null;
 
         public StateDevice(string address=null, HAInterface iface=null, List<StateDevice> devices=null)
         {
-            Type = NetomityObjectType.Device;
             _iface = iface;
             _address = address;
             _commandDelegates = new List<Action<Command>>();
             _stateDelegates = new List<Action<State>>();
-
-            RegisterDevices(devices);
-
-            _state = new State(){
+            _state = new State()
+            {
                 Primary = StateType.Unknown
             };
 
+            _Initialize();
+
+            RegisterDevices(devices);
+
+
             if(_iface !=null)
                 _iface.OnCommand(source: _address, action: _CommandReceived);
+        }
+
+        internal virtual void _Initialize()
+        {
+            Type = NetomityObjectType.Device;
+
+            _commandsAvailable = new List<Command>() {
+                new Command() {
+                    Primary = CommandType.On
+                },
+                new Command() {
+                    Primary = CommandType.Off
+                },  
+            };
+
         }
 
         private void RegisterDevices(List<StateDevice> devices)
@@ -61,6 +79,15 @@ namespace Netomity.Devices
             set
             {
                 _state = value;
+            }
+        }
+
+        [DataMember]
+        public List<Command> CommandsAvailable
+        {
+            get
+            {
+                return _commandsAvailable;
             }
         }
 
@@ -174,6 +201,16 @@ namespace Netomity.Devices
         public void OnStateChange(Action<State> action)
         {
             _stateDelegates.Add(action);
+        }
+
+        public Task<bool> On()
+        {
+            return Command(commandT: CommandType.On);
+        }
+
+        public Task<bool> Off()
+        {
+            return Command(commandT: CommandType.Off);
         }
 
     }

@@ -43,5 +43,11 @@ namespace NetomityTests.Web
             Assert.AreNotEqual("", r);
             Assert.AreEqual(StateType.On, sd2.State.Primary);
         }
+
+        [TestCleanup]
+        public void CleanUp()
+        {
+            Thread.Sleep(1000);
+        }
     }
 }

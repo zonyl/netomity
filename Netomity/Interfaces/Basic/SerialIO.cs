@@ -20,6 +20,7 @@ namespace Netomity.Interfaces.Basic
         {
             _sp = new SerialPort(portName, portSpeed);
             _sp.DataReceived += _serialPort_DataReceived;
+            _Initialize();
         }
 
         public override event DataReceivedHandler DataReceived;

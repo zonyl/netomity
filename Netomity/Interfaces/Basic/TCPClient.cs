@@ -21,6 +21,7 @@ namespace Netomity.Interfaces.Basic
         public override event DataReceivedHandler DataReceived;
         public TCPClient(string address = null, int port = 0)
         {
+            Log("tcpconst");
             _hostName = address;
             _portNumber = port;
 

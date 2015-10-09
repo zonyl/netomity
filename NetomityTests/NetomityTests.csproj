@@ -69,6 +69,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\Conversions.cs" />
     <Compile Include="Web\RestHostTests.cs" />
+    <Compile Include="Web\WebHostTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Netomity\Netomity.csproj">
@@ -79,7 +80,9 @@
   <ItemGroup>
     <Fakes Include="Fakes\Netomity.fakes" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

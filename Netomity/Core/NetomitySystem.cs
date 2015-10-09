@@ -43,5 +43,13 @@ namespace Netomity.Core
                 Thread.Sleep(1000);
             }
         }
+
+        public IQueryable<NetomityObject> NetomityObjects
+        {
+            get
+            {
+                return c_objects.AsQueryable();
+            }
+        }
     }
 }

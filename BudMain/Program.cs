@@ -24,13 +24,19 @@ namespace BudMain
 
             var tp = new TCPClient(address: "192.168.12.161", port: 3333);
             var plm = new Insteon(iface: tp);
-            var test_tamp = new StateDevice(address: "00.5B.5d", iface: plm)
+
+            var test_lamp = new StateDevice(address: "00.5B.5d", iface: plm)
             {
                 Name = "TestLamp1"
             };
 
-            var rh = new RestHost(address: BASE_ADDR);
+            var Bedtime = new Scene(devices: new List<StateDevice>() { test_lamp })
+                {
+                    Name = "Bedtime"
+                };
 
+            //var rh = new RestHost(address: BASE_ADDR);
+            var wh = new WebHost(address: "http://localhost:8083/");
             ns.Run();
 
         }
