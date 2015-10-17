@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Netomity.Web;
+using System.Web.Http;
 using System.Net.Http.Formatting;
 using Netomity.Devices;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace NetomityTests.Web.Controllers
         public void SetUp()
         {
             _hc = new HomeController();
+            _hc.BaseFolder = @"C:\projects\Netomity\Netomity\Web\Content\";
         }
 
         [TestMethod]

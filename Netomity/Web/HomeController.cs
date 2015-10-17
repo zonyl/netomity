@@ -22,6 +22,7 @@ namespace Netomity.Web
     {
         const string HTTP_CONFIG = "MS_HttpConfiguration";
         const string BASE_FILE_PATH_KEY = "BaseFilePath";
+        string _baseFolder = "";
 
         [Route("")]
         [HttpGet]
@@ -77,12 +78,20 @@ namespace Netomity.Web
             return StringToHTMLResponse(RazorToString<T>(text, model));
         }
 
-        private string BaseFolder
+        public string BaseFolder
         {
             get
             {
-                HttpConfiguration http = (HttpConfiguration)Request.Properties[HTTP_CONFIG];
-                return http.Properties[BASE_FILE_PATH_KEY].ToString();
+                if (Request != null)
+                {
+                    HttpConfiguration http = (HttpConfiguration)Request.Properties[HTTP_CONFIG];
+                    _baseFolder = http.Properties[BASE_FILE_PATH_KEY].ToString();
+                }
+                return _baseFolder;
+            }
+            set
+            {
+                _baseFolder = value;
             }
         }
     }
