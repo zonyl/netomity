@@ -15,6 +15,8 @@ namespace Netomity.Web
     public class WebConfig
     {
         Type RestControllerType = typeof(Netomity.Web.RestController);
+        private const string BASE_FILE_PATH_KEY = "BaseFilePath";
+        public static string BaseFilePath;
 
         // This code configures Web API. The Startup class is specified as a type
         // parameter in the WebApp.Start method.
@@ -32,11 +34,9 @@ namespace Netomity.Web
             //config.Routes.MapHttpRoute("defaultext", "{controller}.{ext}", new { ext = RouteParameter.Optional });
             //config.Routes.MapHttpRoute("default", "{controller}", new { controller = "Home" });
 
-
-
             //config.MapHttpAttributeRoutes();
             config.MapHttpAttributeRoutes();
-
+            config.Properties[BASE_FILE_PATH_KEY] = BaseFilePath;
             //config.Routes.MapHttpRoute(
             //    name: "DefaultApi",
             //    routeTemplate: "api/{controller}/{id}",

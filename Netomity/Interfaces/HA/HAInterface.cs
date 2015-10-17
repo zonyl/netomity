@@ -232,7 +232,7 @@ namespace Netomity.Interfaces.HA
             var now = DateTime.Now;
             var timeoutList = _outgoingCommandQueueDetail.Values
                                 .Where((x) => x.Status == CommandStatus.Sent &&
-                                now > x.OriginalSentTime + x.Timeout);
+                                now > x.OriginalSentTime + x.Timeout).ToList();
             foreach (var timeout in timeoutList)
             {
                 timeout.Status = CommandStatus.Timeout;

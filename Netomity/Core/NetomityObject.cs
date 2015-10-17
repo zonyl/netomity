@@ -14,12 +14,15 @@ namespace Netomity.Core
         public static List<Task> c_tasks = new List<Task>();
         static internal Logger c_logger = null;
         internal Logger _logger = null;
+        private int _id = 0;
+
         public int Id
         {
             get
             {
-                var baseString = Type.ToString() + Name + c_objects.Count().ToString();
-                return baseString.GetHashCode();
+                if (_id == 0)
+                    _id = (Type.ToString() + Name + c_objects.Count().ToString()).GetHashCode();
+                return _id;
             }
         }
         public Logger Logger
@@ -74,10 +77,15 @@ namespace Netomity.Core
 
         public void Log(Exception ex)
         {
+            var message = String.Format("Exception Occured: {0}",
+                    ex.ToString());
+
+            if (ex.InnerException != null)
+                message+= "==INNER==" + ex.InnerException.ToString();
+
             LogString(
                 level: Core.Logger.Level.Error,
-                message: String.Format("Exception Occured: {0}",
-                    ex.ToString())
+                message: message
                 );
         }
        

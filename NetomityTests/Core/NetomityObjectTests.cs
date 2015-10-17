@@ -88,7 +88,7 @@ namespace NetomityTests.Core
 
             _no.Name = "Test Object Hash";
             var thirdHash = _no.Id;
-            Assert.AreNotEqual(firstHash, thirdHash);
+            Assert.AreEqual(firstHash, thirdHash);
 
         }
     }

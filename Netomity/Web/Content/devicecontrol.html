@@ -17,7 +17,8 @@
 </head>
 <body>
     <div class="container">
-        <table class="table">
+        <form method="post">
+        <table class="table" border="1">
             @foreach(var obj in @Model)
             {
             <tr>
@@ -26,14 +27,14 @@
                 <td>
                     @foreach(var command in obj.CommandsAvailable)
                     {
-                    <button class="button" onclick="location.href = 'device/command/@command.Primary.ToString()';">
-                        @command.Primary.ToString()
-                    </button>
+                        <input type="submit" id="@obj.Id" name="@obj.Id" value="@command.Primary.ToString()"/>
+
                     }
                 </td>
             </tr>
             }
         </table>
+        </form>
         @Model.ToString()
 
         @foreach(var obj in @Model)

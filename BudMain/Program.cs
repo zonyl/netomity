@@ -15,7 +15,9 @@ namespace BudMain
     {
         static void Main(string[] args)
         {
-            const string BASE_ADDR = "http://localhost:8081/Netomity/API/v1";
+            //const string BASE_ADDR = "http://localhost:8081/Netomity/API/v1";
+            const string BASE_ADDR = "http://localhost:8083/";
+            const string BASE_FOLDER = @"C:\projects\Netomity\Netomity\Web\Content\";
 
 
             var logger = new Logger(@"C:\temp\netomity-log.txt");
@@ -36,7 +38,7 @@ namespace BudMain
                 };
 
             //var rh = new RestHost(address: BASE_ADDR);
-            var wh = new WebHost(address: "http://localhost:8083/");
+            var wh = new WebHost(address: BASE_ADDR, filePath: BASE_FOLDER);
             ns.Run();
 
         }
