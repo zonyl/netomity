@@ -32,6 +32,16 @@ namespace BudMain
                 Name = "TestLamp1"
             };
 
+            var master_fan = new StateDevice(address: "1f.ad.76", iface: plm)
+            {
+                Name = "Master Fan"
+            };
+
+            var master_light = new StateDevice(address: "38.2e.a2", iface: plm)
+            {
+                Name = "Master Light"
+            };
+
             var Bedtime = new Scene(devices: new List<StateDevice>() { test_lamp })
                 {
                     Name = "Bedtime"

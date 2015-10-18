@@ -95,6 +95,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Devices\Behaviors\BaseBehavior.cs" />
     <Compile Include="Core\Factory.cs" />
     <Compile Include="Core\INetomityObject.cs" />
     <Compile Include="Core\Logger.cs" />
