@@ -1,4 +1,5 @@
 ﻿using Netomity.Core;
+using Netomity.Devices.Behaviors;
 using Netomity.Interfaces;
 using Netomity.Interfaces.HA;
 using System;
@@ -23,13 +24,16 @@ namespace Netomity.Devices
         List<Action<State>> _stateDelegates = null;
         List<StateDevice> _devices = null;
         List<Command> _commandsAvailable = null;
+        List<BaseBehavior> _behaviors = null;
 
-        public StateDevice(string address=null, HAInterface iface=null, List<StateDevice> devices=null)
+        public StateDevice(string address=null, HAInterface iface=null, List<StateDevice> devices=null, List<BaseBehavior> behaviors=null)
         {
             _iface = iface;
             _address = address;
             _commandDelegates = new List<Action<Command>>();
             _stateDelegates = new List<Action<State>>();
+            _behaviors = new List<BaseBehavior>();
+
             _state = new State()
             {
                 Primary = StateType.Unknown
@@ -38,10 +42,19 @@ namespace Netomity.Devices
             _Initialize();
 
             RegisterDevices(devices);
-
+            RegisterBehaviors(behaviors);
 
             if(_iface !=null)
                 _iface.OnCommand(source: _address, action: _CommandReceived);
+        }
+
+        private void RegisterBehaviors(List<BaseBehavior> behaviors)
+        {
+            if (behaviors != null)
+                _behaviors = behaviors;
+
+            _behaviors.ForEach(b => b.Register(this));
+
         }
 
         internal virtual void _Initialize()
@@ -66,7 +79,8 @@ namespace Netomity.Devices
             else
                 _devices = new List<StateDevice>();
 
-            _devices.ForEach(d => d.OnCommand((c) => { _CommandReceived(c); }));
+ //           _devices.ForEach(d => d.OnCommand((c) => { _CommandReceived(c); }));
+            _devices.ForEach(d => d.OnCommand((c) => { Command(c); }));
         }
 
         [DataMember]
@@ -110,6 +124,7 @@ namespace Netomity.Devices
 
         private void _delegateCommand(Command command)
         {
+            command.SourceObject = this;
             foreach (var action in _commandDelegates)
             {
                 action(command);
@@ -149,33 +164,52 @@ namespace Netomity.Devices
         private async Task<bool> Command(Command command)
         {
             bool isSent = false;
-            Log(String.Format("Sending command to interface: {0}", command.Primary.ToString()));
-            try
+
+            Log(String.Format("Incoming Command: {0}", command.Primary));
+            Log("Filtering");
+            List<Command> commands = ApplyBehaviors(command);
+            Log(String.Format("Behavior Filter Command Result Count: {0}", commands.Count()));
+
+            foreach (var c in commands)
             {
-                if (_iface != null)
-                    isSent = await _iface.Command(command);
-                else
+                Log(String.Format("Sending command to interface: {0}", c.Primary.ToString()));
+                try
                 {
-                    Log("Command issued however no interface");
-                    isSent = true;
+                    if (_iface != null)
+                        isSent = await _iface.Command(c);
+                    else
+                    {
+                        Log("Command issued however no interface");
+                        isSent = true;
+                    }
+                    _CommandReceived(c);
                 }
-                _CommandReceived(command);
-            }
-            catch (System.Exception ex)
-            {
-                Log(ex);
+                catch (System.Exception ex)
+                {
+                    Log(ex);
+                }
             }
             return isSent;
 
         }
 
-        public Task<bool> Command(CommandType commandT, string secondary=null)
+        private List<Command> ApplyBehaviors(Command command)
+        {
+            List<Command> commandsOutput = null;
+            _behaviors.OrderBy(b => b.Priority).ToList().ForEach(b => commandsOutput = b.FilterCommand(command));
+            if (commandsOutput == null)
+                commandsOutput = new List<Command>() { command };
+            return commandsOutput;
+        }
+
+        public Task<bool> Command(CommandType primary, string secondary=null, NetomityObject sourceObject=null)
         {
             return Command(command: new Command()
             {
                 Destination = _address,
-                Primary = commandT,
-                Secondary = secondary
+                Primary = primary,
+                Secondary = secondary,
+                SourceObject = sourceObject
             });
         }
 
@@ -190,7 +224,7 @@ namespace Netomity.Devices
                     break;
                 }
             }
-            return Command(commandT: commandType, secondary: secondary);
+            return Command(primary: commandType, secondary: secondary);
         }
 
         public void OnCommand(Action<Command> action)
@@ -205,12 +239,12 @@ namespace Netomity.Devices
 
         public Task<bool> On()
         {
-            return Command(commandT: CommandType.On);
+            return Command(primary: CommandType.On);
         }
 
         public Task<bool> Off()
         {
-            return Command(commandT: CommandType.Off);
+            return Command(primary: CommandType.Off);
         }
 
     }

@@ -2,6 +2,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Netomity.Devices.Behaviors;
 using Netomity.Devices;
+using Netomity.Core;
+using System.Collections.Generic;
 
 namespace NetomityTests.Devices.Behaviors
 {
@@ -29,5 +31,22 @@ namespace NetomityTests.Devices.Behaviors
             Assert.IsTrue(_b.Targets.Contains(sd));
 
         }
+
+        [TestMethod]
+        public void CommandFilterTest()
+        {
+            var c = new Command()
+            {
+                Source = "12.34.56",
+                SourceObject = _b,
+                Destination = "aa.bb.cc",
+                Primary = CommandType.On,
+                Secondary = "secondary"
+            };
+           
+            List<Command> rCommands = _b.FilterCommand(c);
+            Assert.AreEqual(c, rCommands[0]);
+        }
+
     }
 }

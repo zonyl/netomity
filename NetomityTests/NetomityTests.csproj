@@ -82,7 +82,6 @@
     <Compile Include="Core\LoggerTests.cs" />
     <Compile Include="Core\FactoryTests.cs" />
     <Compile Include="Core\NetomityObjectTests.cs" />
-    <Compile Include="Devices\Behaviors\Schedule.cs" />
     <Compile Include="Devices\Behaviors\ScheduleTests.cs" />
     <Compile Include="Devices\StateDeviceTests.cs" />
     <Compile Include="Interfaces\Basic\TCPClientTests.cs" />

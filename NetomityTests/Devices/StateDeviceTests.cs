@@ -7,6 +7,7 @@ using Netomity.Interfaces;
 using System.Threading.Tasks;
 using Netomity.Core;
 using System.Collections.Generic;
+using Netomity.Devices.Behaviors;
 
 namespace NetomityTests.Devices
 {
@@ -134,7 +135,7 @@ namespace NetomityTests.Devices
             Name = "TestDevice2"
             };
             Assert.AreEqual(StateType.Unknown, sd2.State.Primary);
-            var r = sd1.Command("on");
+            var r = sd1.Command(CommandType.On);
 
             Assert.IsTrue(r.Result);
             Assert.AreEqual(StateType.On, sd2.State.Primary);
@@ -144,6 +145,46 @@ namespace NetomityTests.Devices
         public void StateDeviceType()
         {
             Assert.AreEqual(NetomityObjectType.Device, _sd.Type);
+        }
+
+        [TestMethod]
+        public void StateDeviceBevaiorRegister()
+        {
+            var WasCalled = false;
+            var b = new Netomity.Devices.Behaviors.Fakes.StubBaseBehavior
+            {
+                RegisterStateDevice = (l) => { WasCalled = true; }
+            };
+
+            Assert.IsFalse(WasCalled);
+            var sd = new StateDevice(behaviors: new List<BaseBehavior>() { b });
+
+            Assert.IsTrue(WasCalled);
+        }
+
+        [TestMethod]
+        public void FilterCommandOneTest()
+        {
+            var IsValid = false;
+
+            var commandsOutgoing = new List<Command>()
+            {
+                new Command() {Primary = CommandType.On}
+            };
+
+            var b = new Netomity.Devices.Behaviors.Fakes.StubBaseBehavior
+            {
+                FilterCommandCommand = (c) => {
+                    IsValid = c.Primary == CommandType.Off ? true : false;
+                    return commandsOutgoing;
+                }
+            };
+
+            var sd = new StateDevice(behaviors: new List<BaseBehavior>() { b });
+            sd.Command(primary: CommandType.Off);
+            Assert.AreEqual(sd.State.Primary, StateType.On);
+
+
         }
     }
 }
