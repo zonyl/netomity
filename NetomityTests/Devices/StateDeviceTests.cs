@@ -151,13 +151,13 @@ namespace NetomityTests.Devices
         public void StateDeviceBevaiorRegister()
         {
             var WasCalled = false;
-            var b = new Netomity.Devices.Behaviors.Fakes.StubBaseBehavior
+            var b = new Netomity.Devices.Behaviors.Fakes.StubBehaviorBase
             {
                 RegisterStateDevice = (l) => { WasCalled = true; }
             };
 
             Assert.IsFalse(WasCalled);
-            var sd = new StateDevice(behaviors: new List<BaseBehavior>() { b });
+            var sd = new StateDevice(behaviors: new List<BehaviorBase>() { b });
 
             Assert.IsTrue(WasCalled);
         }
@@ -167,24 +167,62 @@ namespace NetomityTests.Devices
         {
             var IsValid = false;
 
-            var commandsOutgoing = new List<Command>()
-            {
-                new Command() {Primary = CommandType.On}
-            };
+            var commandOutput = new Command() { Primary = CommandType.On };
 
-            var b = new Netomity.Devices.Behaviors.Fakes.StubBaseBehavior
+
+            var b = new Netomity.Devices.Behaviors.Fakes.StubBehaviorBase
             {
                 FilterCommandCommand = (c) => {
                     IsValid = c.Primary == CommandType.Off ? true : false;
-                    return commandsOutgoing;
+                    return commandOutput;
                 }
             };
 
-            var sd = new StateDevice(behaviors: new List<BaseBehavior>() { b });
+            var sd = new StateDevice(behaviors: new List<BehaviorBase>() { b });
             sd.Command(primary: CommandType.Off);
             Assert.AreEqual(sd.State.Primary, StateType.On);
+        }
+
+        [TestMethod]
+        public void FilterPriorityTest()
+        {
+            NetomityObject lastCalled=null;
+
+            var commandOutput = new Command() { Primary = CommandType.On };
 
 
+            var b1 = new Netomity.Devices.Behaviors.Fakes.StubBehaviorBase()
+            {
+                Priority = BehaviorPriority.Last
+            };
+            b1.FilterCommandCommand = (c) =>
+            {
+                lastCalled = b1;
+                return commandOutput;
+            };
+
+            var b2 = new Netomity.Devices.Behaviors.Fakes.StubBehaviorBase()
+            {
+                Priority = BehaviorPriority.Medium
+            };
+            b2.FilterCommandCommand = (c) =>
+            {
+                lastCalled = b2;
+                return commandOutput;
+            };
+
+
+
+            var sd = new StateDevice(behaviors: new List<BehaviorBase>() { b1, b2 });
+            sd.Command(primary: CommandType.Off);
+            Assert.AreEqual(sd.State.Primary, StateType.On);
+            Assert.AreEqual(b2, lastCalled);
+
+            b1.Priority = BehaviorPriority.First;
+            sd.Command(primary: CommandType.Off);
+            Assert.AreEqual(b1, lastCalled);
+
+            
         }
     }
 }

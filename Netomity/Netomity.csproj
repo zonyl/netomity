@@ -108,6 +108,7 @@
     <Compile Include="Core\PeriodicTimer.cs" />
     <Compile Include="Core\State.cs" />
     <Compile Include="Core\StateType.cs" />
+    <Compile Include="Devices\Behaviors\Map.cs" />
     <Compile Include="Devices\Behaviors\Schedule.cs" />
     <Compile Include="Devices\Scene.cs" />
     <Compile Include="Devices\StateDevice.cs" />

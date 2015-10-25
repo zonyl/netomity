@@ -29,7 +29,7 @@ namespace NetomityTests.Devices.Behaviors
         [TestMethod]
         public void SingleScheduleTest()
         {
-            var s = new StateDevice(behaviors: new List<BaseBehavior>() { _s });
+            var s = new StateDevice(behaviors: new List<BehaviorBase>() { _s });
             Assert.AreEqual(StateType.Unknown, s.State.Primary);
             Thread.Sleep(64000);
             Assert.AreEqual(StateType.On, s.State.Primary);

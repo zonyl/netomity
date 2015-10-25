@@ -7,14 +7,25 @@ using System.Threading.Tasks;
 
 namespace Netomity.Devices.Behaviors
 {
-    public class BaseBehavior: NetomityObject
+
+    public enum BehaviorPriority
+    {
+        First = 1,
+        FirstMedium = 3,
+        Medium = 5,
+        MediumLast = 8,
+        Last = 9,
+    }
+
+    public class BehaviorBase: NetomityObject
     {
         public List<StateDevice> Targets { get; set; }
-        public int Priority { get; set; }
+        public BehaviorPriority Priority { get; set; }
 
-        public BaseBehavior()
+        public BehaviorBase()
         {
             Targets = new List<StateDevice>();
+            Priority = BehaviorPriority.Medium;
         }
 
         public virtual void Register(Devices.StateDevice sd)
@@ -22,9 +33,9 @@ namespace Netomity.Devices.Behaviors
             Targets.Add(sd);
         }
 
-        public virtual List<Command> FilterCommand(Command command)
+        public virtual Command FilterCommand(Command command)
         {
-            return new List<Command>() { command };
+            return command;
         }
     }
 }

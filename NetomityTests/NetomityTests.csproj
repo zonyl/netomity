@@ -83,6 +83,7 @@
     <Compile Include="Core\FactoryTests.cs" />
     <Compile Include="Core\NetomityObjectTests.cs" />
     <Compile Include="Devices\Behaviors\ScheduleTests.cs" />
+    <Compile Include="Devices\Behaviors\MapTests.cs" />
     <Compile Include="Devices\StateDeviceTests.cs" />
     <Compile Include="Interfaces\Basic\TCPClientTests.cs" />
     <Compile Include="Interfaces\Basic\TCPServerTests.cs" />

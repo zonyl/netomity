@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Netomity.Devices.Behaviors
 {
-    public class Schedule: BaseBehavior
+    public class Schedule: BehaviorBase
     {
         List<Tuple<string, CommandType, string>> _schedules = null;
         PeriodicTimer _pt = null;

@@ -24,15 +24,15 @@ namespace Netomity.Devices
         List<Action<State>> _stateDelegates = null;
         List<StateDevice> _devices = null;
         List<Command> _commandsAvailable = null;
-        List<BaseBehavior> _behaviors = null;
+        List<BehaviorBase> _behaviors = null;
 
-        public StateDevice(string address=null, HAInterface iface=null, List<StateDevice> devices=null, List<BaseBehavior> behaviors=null)
+        public StateDevice(string address=null, HAInterface iface=null, List<StateDevice> devices=null, List<BehaviorBase> behaviors=null)
         {
             _iface = iface;
             _address = address;
             _commandDelegates = new List<Action<Command>>();
             _stateDelegates = new List<Action<State>>();
-            _behaviors = new List<BaseBehavior>();
+            _behaviors = new List<BehaviorBase>();
 
             _state = new State()
             {
@@ -48,7 +48,7 @@ namespace Netomity.Devices
                 _iface.OnCommand(source: _address, action: _CommandReceived);
         }
 
-        private void RegisterBehaviors(List<BaseBehavior> behaviors)
+        private void RegisterBehaviors(List<BehaviorBase> behaviors)
         {
             if (behaviors != null)
                 _behaviors = behaviors;
@@ -157,7 +157,8 @@ namespace Netomity.Devices
 
             return new State()
             {
-                Primary = st
+                Primary = st,
+                Secondary = command.Secondary
             };
         }
 
@@ -167,39 +168,36 @@ namespace Netomity.Devices
 
             Log(String.Format("Incoming Command: {0}", command.Primary));
             Log("Filtering");
-            List<Command> commands = ApplyBehaviors(command);
-            Log(String.Format("Behavior Filter Command Result Count: {0}", commands.Count()));
+            var c = ApplyBehaviors(command);
 
-            foreach (var c in commands)
+            Log(String.Format("Sending command to interface: {0}", c.Primary.ToString()));
+            try
             {
-                Log(String.Format("Sending command to interface: {0}", c.Primary.ToString()));
-                try
+                if (_iface != null)
+                    isSent = await _iface.Command(c);
+                else
                 {
-                    if (_iface != null)
-                        isSent = await _iface.Command(c);
-                    else
-                    {
-                        Log("Command issued however no interface");
-                        isSent = true;
-                    }
-                    _CommandReceived(c);
+                    Log("Command issued however no interface");
+                    isSent = true;
                 }
-                catch (System.Exception ex)
-                {
-                    Log(ex);
-                }
+                _CommandReceived(c);
+            }
+            catch (System.Exception ex)
+            {
+                Log(ex);
             }
             return isSent;
 
         }
 
-        private List<Command> ApplyBehaviors(Command command)
+        private Command ApplyBehaviors(Command command)
         {
-            List<Command> commandsOutput = null;
-            _behaviors.OrderBy(b => b.Priority).ToList().ForEach(b => commandsOutput = b.FilterCommand(command));
-            if (commandsOutput == null)
-                commandsOutput = new List<Command>() { command };
-            return commandsOutput;
+            Command commandOutput = command;
+            _behaviors.OrderByDescending(b => b.Priority).ToList().ForEach(b => {
+                commandOutput = b.FilterCommand(commandOutput);
+            }
+                );
+            return commandOutput;
         }
 
         public Task<bool> Command(CommandType primary, string secondary=null, NetomityObject sourceObject=null)

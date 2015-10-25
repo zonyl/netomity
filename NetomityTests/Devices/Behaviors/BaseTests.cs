@@ -10,12 +10,12 @@ namespace NetomityTests.Devices.Behaviors
     [TestClass]
     public class BaseTests
     {
-        BaseBehavior _b = null;
+        BehaviorBase _b = null;
 
         [TestInitialize]
         public void SetUp()
         {
-            _b = new BaseBehavior();
+            _b = new BehaviorBase();
         }
         [TestMethod]
         public void InitializationTest()
@@ -44,8 +44,8 @@ namespace NetomityTests.Devices.Behaviors
                 Secondary = "secondary"
             };
            
-            List<Command> rCommands = _b.FilterCommand(c);
-            Assert.AreEqual(c, rCommands[0]);
+            var rCommand = _b.FilterCommand(c);
+            Assert.AreEqual(c, rCommand);
         }
 
     }
