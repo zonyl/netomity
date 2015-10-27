@@ -85,13 +85,16 @@
     <Compile Include="Devices\Behaviors\ScheduleTests.cs" />
     <Compile Include="Devices\Behaviors\MapTests.cs" />
     <Compile Include="Devices\StateDeviceTests.cs" />
+    <Compile Include="Devices\DeviceFunctional.cs" />
     <Compile Include="Interfaces\Basic\TCPClientTests.cs" />
     <Compile Include="Interfaces\Basic\TCPServerTests.cs" />
     <Compile Include="Interfaces\Basic\BasicConnectorTests.cs" />
+    <Compile Include="Interfaces\HA\W800Tests.cs" />
     <Compile Include="Interfaces\HA\InsteonTests.cs" />
     <Compile Include="Interfaces\HA\HAInterfaceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\Conversions.cs" />
+    <Compile Include="Utility\TimerTests.cs" />
     <Compile Include="Web\Controllers\HomeControllerTests.cs" />
     <Compile Include="Web\RestHostTests.cs" />
     <Compile Include="Web\WebHostTests.cs" />

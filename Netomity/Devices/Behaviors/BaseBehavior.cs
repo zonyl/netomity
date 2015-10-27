@@ -11,9 +11,13 @@ namespace Netomity.Devices.Behaviors
     public enum BehaviorPriority
     {
         First = 1,
+        FirstFirstMedium = 2,
         FirstMedium = 3,
+        FirstMediumMedium = 4,
         Medium = 5,
-        MediumLast = 8,
+        MediumMediumLast = 6,
+        MediumLast = 7,
+        MediumLastLast = 8,
         Last = 9,
     }
 
@@ -37,5 +41,11 @@ namespace Netomity.Devices.Behaviors
         {
             return command;
         }
+
+        internal void DelegateCommand(CommandType primary, string secondary, NetomityObject sourceObject)
+        {
+            Targets.ForEach(t => t.Command(primary: primary, secondary: secondary, sourceObject: sourceObject));
+        }
+
     }
 }

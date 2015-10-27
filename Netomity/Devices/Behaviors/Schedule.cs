@@ -52,7 +52,8 @@ namespace Netomity.Devices.Behaviors
                     next.Month == current.Month &&
                     next.Day == current.Day)
                 {
-                    Targets.ForEach(t => t.Command(primary: schedule.Item2, secondary: schedule.Item3, sourceObject: this));
+//                    Targets.ForEach(t => t.Command(primary: schedule.Item2, secondary: schedule.Item3, sourceObject: this));
+                    DelegateCommand(primary: schedule.Item2, secondary: schedule.Item3, sourceObject: this);
                 }
             }
         }
