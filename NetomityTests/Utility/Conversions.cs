@@ -63,5 +63,34 @@ namespace NetomityTests.Utility
             var st = Conversions.ValueToStringEnum<CommandType>(CommandType.On.ToString());
             Assert.AreEqual(CommandType.On, st);
         }
+
+        [TestMethod]
+        public void BinaryToBytesTest()
+        {
+            var str = "01100000 10011111 00100000 11011111";
+            var bytes = Conversions.BinaryStrToBytes(str);
+            Assert.AreEqual(96, bytes[0]);
+            Assert.AreEqual(223, bytes[3]);
+
+        }
+
+        [TestMethod]
+        public void BinaryToAsciiTest()
+        {
+            var str = "01100000 10011111 00100000 11011111";
+            var ascii = Conversions.BinaryStrToAscii(str);
+            Assert.AreEqual(@"` ß", ascii);
+ 
+        }
+
+        [TestMethod]
+        public void ByteReverseTest()
+        {
+            var str = "01100000";
+            var bytes = Conversions.BinaryStrToBytes(str);
+            var rBytes = Conversions.BytesReverse(bytes);
+            Assert.AreEqual(rBytes[0], 6 );
+        }
+
     }
 }

@@ -81,6 +81,8 @@ namespace Netomity.Interfaces.HA
                     var messageType = _MessageType(dataB[8]);
                     command.Primary = _CommandType(dataB[9]);
                     command.Secondary = Conversions.BytesToInt(dataB[10]).ToString();
+                    command.SourceObject = this;
+
                     if (command.Primary != null 
                             && ( messageType == InsteonMessageType.Broadcast
                             || messageType == InsteonMessageType.Direct

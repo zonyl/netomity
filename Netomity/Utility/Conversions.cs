@@ -92,5 +92,35 @@ namespace Netomity.Utility
             }
             return e;
         }
+
+        public static byte[] BinaryStrToBytes(string str)
+        {
+            str = str.Replace(" ", string.Empty);
+
+            var strings = SplitString(str, 8).ToList();
+            return strings.Select(s => Convert.ToByte(Convert.ToInt32(s,2))).ToArray();
+        }
+
+        private static IEnumerable<string> SplitString(string str, int length)
+        {
+            return str.Select((x, i) => i)
+                .Where(i => i % length == 0)
+                .Select(i => str.Substring(i, str.Length - i >= length ? length : str.Length - i));
+
+        }
+
+        public static string BinaryStrToAscii(string str)
+        {
+            return BytesToAscii(BinaryStrToBytes(str));
+        }
+
+        public static byte[] BytesReverse(byte[] bytes)
+        {
+            for (var i = 0; i  <bytes.Count(); i++)
+            {
+                bytes[i] = (byte) ((bytes[i] * 0x202020202 & 0x010884422010) % 1023);
+            }
+            return bytes;
+        }
     }
 }

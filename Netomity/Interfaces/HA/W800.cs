@@ -11,12 +11,26 @@ namespace Netomity.Interfaces.HA
 {
     public class W800: HAInterface
     {
-        Dictionary<CommandType, Tuple<byte, byte, byte>> _CommandLookup =
-            new Dictionary<CommandType, Tuple<byte, byte, byte>>()
+        Dictionary<int, string> _HouseCodes = new Dictionary<int, string>()
             {
-                { CommandType.On, new Tuple<byte, byte, byte>(0x62,0x11,0xff)},
-                { CommandType.Off, new Tuple<byte, byte, byte>(0x62,0x13,0x00)},
+                { 0x00, "m"},
+                { 0x01, "e"},
+                { 0x02, "c"},
+                { 0x03, "k"},
+                { 0x04, "o"},
+                { 0x05, "g"},
+                { 0x06, "a"},
+                { 0x07, "i"},
+                { 0x08, "n"},
+                { 0x09, "f"},
+                { 0x0A, "d"},
+                { 0x0B, "l"},
+                { 0x0c, "p"},
+                { 0x0d, "h"},
+                { 0x0e, "b"},
+                { 0x0f, "j"},
             };
+
 
         public W800(BasicInterface iface)
             : base(iface: iface)
@@ -27,94 +41,57 @@ namespace Netomity.Interfaces.HA
 
         public override async Task<bool> Command(Command command)
         {
-            var bAddress = Conversions.HexToBytes(command.Destination);
-            var commandLookup = _CommandLookup[command.Primary];
-            var lCommand = 
-                new List<byte>() {
-                    0x02,
-                    commandLookup.Item1,
-                    bAddress[0],
-                    bAddress[1],
-                    bAddress[2],
-                    0x0f,
-                    commandLookup.Item2,
-                    commandLookup.Item3
-                };
-
-            byte[] bCommand = lCommand.ToArray();
-
-            var aCommand = Conversions.BytesToAscii(bCommand);
-            //_interface.Send(aCommand);
-            var succesResponse = lCommand;
-            succesResponse.Add(0x06);
-            var failResponse = lCommand;
-            failResponse.Add(0x15);
-
-            var response = await Send(new SendParams(){
-                    SendData = aCommand,
-                    SuccessResponse = aCommand + Conversions.HexToAscii("06"),
-                    FailureResponse = aCommand + Conversions.HexToAscii("15"),
-                    Timeout = 2000
-                }
-            );
-
-            Log(String.Format("Command Status: {0}", response));
-            return response;
+            return false;
             
         }
         protected override List<Command> _DataToCommands(string data)
         {
-            var commands = new List<Command>();
-            var dataB = Conversions.AsciiToBytes(data);
+            var dBytes = Conversions.AsciiToBytes(data);
+            var rBytes = Conversions.BytesReverse(dBytes);
 
-            var command = new Command();
-            if (dataB[0] == 0x02)
-                //Incoming Standard Message
-                if (dataB[1] == 0x50)
-                {
-                    command.Source = Conversions.BytesToHex(dataB[2])
-                        + "." + Conversions.BytesToHex(dataB[3])
-                        + "." + Conversions.BytesToHex(dataB[4]);
-                    command.Destination = Conversions.BytesToHex(dataB[5])
-                        + "." + Conversions.BytesToHex(dataB[6])
-                        + "." + Conversions.BytesToHex(dataB[7]);
-                    var messageType = _MessageType(dataB[8]);
-                    command.Primary = _CommandType(dataB[9]);
-                    command.Secondary = Conversions.BytesToInt(dataB[10]).ToString();
-                    if (command.Primary != null 
-                            && ( messageType == InsteonMessageType.Broadcast
-                            || messageType == InsteonMessageType.Direct
-                            || messageType == InsteonMessageType.BroadCastLinkAll
-                            ))
-                        commands.Add(command);
+            var sBytes = new byte[4]
+            {
+                rBytes[2],
+                rBytes[3],
+                rBytes[0],
+                rBytes[1],
+            };
+
+            string houseCode = _HouseCodes[sBytes[2] & 0x0f];
+
+            int unitCode =
+                ((sBytes[0] & 0x18) >> 3) +
+                ((sBytes[0] & 0x02) << 1) +
+                ((sBytes[2] & 0x20) >> 2) +
+                1;
+
+            CommandType commandPrimary = null;
+
+            switch (sBytes[0] & 0x05)
+            {
+                case 4:
+                    commandPrimary = CommandType.Off;
+                    break;
+                case 0:
+                    commandPrimary = CommandType.On;
+                    break;
+                default:
+                    commandPrimary = CommandType.Unknown;
+                    break;
+            }
+
+            var commands = new List<Command>()
+            {
+                new Command() {
+                    Primary = commandPrimary,
+                    Source = String.Format("{0}{1}", houseCode, unitCode),
+                    Destination = String.Format("{0}{1}", houseCode, unitCode),
+                    SourceObject = this,
                 }
+            };
 
             return commands;
         }
 
-        private CommandType _CommandType(byte b1)
-        {
-            var commandType = _CommandLookup.Keys
-                .Where(k => _CommandLookup[k].Item2 == b1);
-            return commandType.FirstOrDefault();
-        }
-
-        private InsteonMessageType _MessageType(byte b)
-        {
-            return (InsteonMessageType)(b & 0xE0);
-        }
-
-        public enum InsteonMessageType
-        {
-            Broadcast = 0x80,
-            Direct = 0x00,
-            DirectAck = 0x20,
-            DirectNak = 0xA0,
-            BroadCastLinkAll = 0xC0,
-            BroadCastLinkClean = 0x40,
-            BroadCastLinkCleanAck = 0x60,
-            BroadCastLinkcleanNak = 0xE0
-        }
-    //    private 
     }
 }

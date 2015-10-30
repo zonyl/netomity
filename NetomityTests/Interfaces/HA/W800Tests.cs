@@ -35,35 +35,18 @@ namespace NetomityTests.Interfaces
         }
 
         [TestMethod]
-        public void CommandOnTests()
-        {
-            var sentData = "026219057B0F11FF";
-            var aSentData = Conversions.HexToAscii(sentData);
-            var result = _i.Command(new Command()
-            {
-                Primary = CommandType.On,
-                Destination = "19.05.7b"
-
-            });
-            Assert.IsFalse(result.Result);
-//            Thread.Sleep(2000);
-            var aData = Conversions.AsciiToHex(_data);
-            Assert.AreEqual(sentData, aData);
-
-        }
-
-        [TestMethod]
         public void OnCommandTests()
         {
             Command command = null;
-            //9/16/2015 5:44:22 PM|Debug|InsteonSerial:
-            //Received Data:>P2z4  Ë< (02 50 32 7A 34 00 00 01 CB 11 01)
-            _i.OnCommand("32.7a.34", action: (c) => {command=c;});
-            _i._DataReceived(Conversions.HexToAscii("0250327A34000001CB1101"));
+            const string address = "a1";
+            // A1 OFF
+            //01100000 10011111 00100000 11011111
+            _i.OnCommand(source: address, action: (c) => { command = c; });
+            _i._DataReceived(Conversions.BinaryStrToAscii("01100000 10011111 00100000 11011111"));
             Thread.Sleep(2000);
             Assert.IsNotNull(command);
-            Assert.AreEqual(command.Primary, CommandType.On);
-            Assert.AreEqual(command.Source, "32.7a.34");
+            Assert.AreEqual(command.Primary, CommandType.Off);
+            Assert.AreEqual(command.Source, address);
 
 
         }
