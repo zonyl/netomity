@@ -35,7 +35,7 @@ namespace NetomityPS
         protected override void ProcessRecord()
         {
             WriteVerbose(String.Format("W800 - Interface:{0}", Interface));
-            WriteObject(new Insteon(iface: Interface) { Name = Name });
+            WriteObject(new W800(iface: Interface) { Name = Name });
         }
     }
 }
