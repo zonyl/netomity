@@ -11,11 +11,11 @@ Netomity currently has support for the following hardware interfaces with
 more planned in the future.
 
    - [Insteon](http://www.insteon.com/) / X10 (2412N, 2412S, 2413U)
+   - [WGL Designs](http://wgldesigns.com/w800.html) W800RF32 X10 RF receiver (W800/RS232)
    
 
 ### Future
    - [Radio Thermostat](http://www.radiothermostat.com/ ) WiFi Enabled Thermostat (CT30)
-   - [WGL Designs](http://wgldesigns.com/w800.html) W800RF32 X10 RF receiver (W800/RS232)
    - [Arduino](http://www.arduino.cc) Uno board (USB)
    - [X10](http://x10pro-usa.com/x10-home/controllers/wired-controllers/cm11a.html) CM11a (RS232)
    - [Spark I/O](http://www.spark.io) WiFi devices
