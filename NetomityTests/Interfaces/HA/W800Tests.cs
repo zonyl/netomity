@@ -50,6 +50,19 @@ namespace NetomityTests.Interfaces
 
 
         }
-    }
+            [TestMethod]
+        public void OnCommandCorruptTests()
+        {
+            Command command = null;
+            const string address = "o13";
+            // A1 OFF
+            //(2403C03F
+            _i.OnCommand(source: address, action: (c) => { command = c; });
+            _i._DataReceived(Conversions.BinaryStrToAscii("00 10 01 00   00 00 00 11   11 00 00 00  00 11 11 11"));
+//            _i._DataReceived(Conversions.HexToAscii("2403C03F"));
+            Thread.Sleep(2000);
+            Assert.IsNull(command);
+        }
 
+    }
 }

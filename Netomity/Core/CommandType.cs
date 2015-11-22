@@ -18,6 +18,8 @@ namespace Netomity.Core
         public static readonly CommandType Level = new CommandType("level");
         public static readonly CommandType Motion = new CommandType("motion");
         public static readonly CommandType Still = new CommandType("still");
+        public static readonly CommandType Light = new CommandType("light");
+        public static readonly CommandType Dark = new CommandType("dark");
 
 
 

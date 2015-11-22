@@ -38,6 +38,7 @@ namespace Netomity.Core
 
         public void Run()
         {
+            Log("Netomity v1.1");
             while(true)
             {
                 Thread.Sleep(1000);

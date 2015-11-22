@@ -7,18 +7,18 @@ using System.Threading.Tasks;
 
 namespace Netomity.Devices.Behaviors
 {
-    public class Map: BehaviorBase
+    public class MapCommand: BehaviorBase
     {
 
         List<Mapping> _mappings = null;
 
-        public Map(CommandType primaryInput,
+        public MapCommand(CommandType primaryInput,
                     CommandType primaryOutput,
                     string secondaryInput=null,
                     string secondaryOutput=null,
                     string sourceAddress=null,
                     NetomityObject sourceObject=null,
-                    int delay=0
+                    int delaySecs=0
             )
         {
             Add(primaryInput: primaryInput,
@@ -27,7 +27,7 @@ namespace Netomity.Devices.Behaviors
                 secondaryOutput: secondaryOutput,
                 sourceAddress: sourceAddress,
                 sourceObject: sourceObject,
-                delay: delay
+                delaySecs: delaySecs
                 );
         }
 
@@ -37,7 +37,7 @@ namespace Netomity.Devices.Behaviors
                     string secondaryOutput=null,
                     string sourceAddress=null,
                     NetomityObject sourceObject=null,
-                    int delay=0
+                    int delaySecs=0
             )
         {
             if (_mappings == null)
@@ -51,49 +51,54 @@ namespace Netomity.Devices.Behaviors
                 SecondaryOutput = secondaryOutput,
                 SourceAddress = sourceAddress,
                 SourceObject = sourceObject,
-                Delay = delay,
+                DelaySecs = delaySecs,
             });
         }
 
         public override Command FilterCommand(Command command)
         {
-            bool IsMapFound = false;
-            Command mapped = null;
-            var mappedOutputs = new List<Command>();
-
-            foreach (var mapping in _mappings)
+            if (command != null)
             {
-                if ((mapping.PrimaryInput == null || command.Primary == mapping.PrimaryInput) &&
-                    (mapping.SecondaryInput == null || command.Secondary == mapping.SecondaryInput) &&
-                    (mapping.SourceAddress == null || command.Source == mapping.SourceAddress) &&
-                    ((mapping.SourceObject == null && !_mappings.Select(mi => mi.SourceObject).Contains(command.SourceObject)) || command.SourceObject == mapping.SourceObject))
-                {
-                    IsMapFound = true;
-                    mapped = new Command()
-                    {
-                        Primary = mapping.PrimaryOutput,
-                        Secondary = mapping.SecondaryOutput,
-                        Destination = command.Destination,
-                        Source = command.Source,
-                        SourceObject = command.SourceObject,
-                    };
-                    if (mapping.Delay != 0)
-                        mapped = DelayCommand(mapping: mapping, command: mapped, delay: mapping.Delay);
-                    mappedOutputs.Add(mapped);
-                }
-            }
-            if (!IsMapFound)
-                mappedOutputs.Add(base.FilterCommand(command));
+                bool IsMapFound = false;
+                Command mapped = null;
+                var mappedOutputs = new List<Command>();
 
-            // We can only return one mapped command. Lets pick one that does something
-            return mappedOutputs.Where(m=> m.Primary != null).LastOrDefault();
+                foreach (var mapping in _mappings)
+                {
+                    if ((mapping.PrimaryInput == null || command.Primary == mapping.PrimaryInput) &&
+                        (mapping.SecondaryInput == null || command.Secondary == mapping.SecondaryInput) &&
+                        (mapping.SourceAddress == null || command.Source == mapping.SourceAddress) &&
+                        ((mapping.SourceObject == null && !_mappings.Select(mi => mi.SourceObject).Contains(command.SourceObject)) || command.SourceObject == mapping.SourceObject))
+                    {
+                        IsMapFound = true;
+                        mapped = new Command()
+                        {
+                            Primary = mapping.PrimaryOutput,
+                            Secondary = mapping.SecondaryOutput,
+                            Destination = command.Destination,
+                            Source = command.Source,
+                            SourceObject = command.SourceObject,
+                        };
+                        if (mapping.DelaySecs != 0)
+                            mapped = DelayCommand(mapping: mapping, command: mapped, delay: mapping.DelaySecs);
+                        mappedOutputs.Add(mapped);
+                    }
+                }
+                if (!IsMapFound)
+                    mappedOutputs.Add(base.FilterCommand(command));
+
+                // We can only return one mapped command. Lets pick one that does something
+                return mappedOutputs.Where(m => m.Primary != null).LastOrDefault();
+            }
+            else
+                return command;
         }
 
         private Command DelayCommand(Mapping mapping, Command command, int delay)
         {
             if (mapping.Timer == null)
-                mapping.Timer = new Netomity.Utility.Timer(delay, 
-                    () => DelegateCommand(primary: command.Primary, secondary: command.Secondary, sourceObject: this)
+                mapping.Timer = new Netomity.Utility.Timer(seconds: delay, 
+                   action: () => DelegateCommand(primary: command.Primary, secondary: command.Secondary, sourceObject: this)
             );
 
             mapping.Timer.Stop();
@@ -115,7 +120,7 @@ namespace Netomity.Devices.Behaviors
         internal string SecondaryOutput { get; set; }
         internal string SourceAddress { get; set; }
         internal NetomityObject SourceObject { get; set; }
-        internal int Delay { get; set; }
+        internal int DelaySecs { get; set; }
         internal Netomity.Utility.Timer Timer { get; set; }
     }
 }

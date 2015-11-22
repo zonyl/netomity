@@ -18,7 +18,7 @@ namespace NetomityTests.Devices
         HAInterface _ha = null;
         BasicInterface _t = null;
         Command _command = null;
-        string _address = "12.45.66";
+        const string _address = "12.45.66";
         string _data;
         Action<Command> _action = null;
 
@@ -34,15 +34,15 @@ namespace NetomityTests.Devices
             };
             _ha = new Netomity.Interfaces.HA.Fakes.StubHAInterface(iface: _t)
             {
-                CommandCommand = (command) => { _command = command; return null; },
+                CommandCommand = (command) => { _command = command; return new Task<bool>(() => {return true;}); },
                 OnCommandStringActionOfCommand = (address, action) => {
                     _action = action;
                 }
 
             };
             _sd = new StateDevice(iface: _ha, address: _address);
-
         }
+
         [TestMethod]
         public void TestInstantiation()
         {

@@ -33,6 +33,12 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Innovative.Geometry">
+      <HintPath>..\packages\Angle.1.0.2.1\lib\net45\Innovative.Geometry.dll</HintPath>
+    </Reference>
+    <Reference Include="Innovative.SolarCalculator">
+      <HintPath>..\packages\SolarCalculator.1.0.8\lib\net45\Innovative.SolarCalculator.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
@@ -108,8 +114,11 @@
     <Compile Include="Core\PeriodicTimer.cs" />
     <Compile Include="Core\State.cs" />
     <Compile Include="Core\StateType.cs" />
-    <Compile Include="Devices\Behaviors\Map.cs" />
+    <Compile Include="Devices\Behaviors\Filter.cs" />
+    <Compile Include="Devices\Behaviors\MapCommand.cs" />
     <Compile Include="Devices\Behaviors\Schedule.cs" />
+    <Compile Include="Devices\Light.cs" />
+    <Compile Include="Devices\Location.cs" />
     <Compile Include="Devices\Scene.cs" />
     <Compile Include="Devices\StateDevice.cs" />
     <Compile Include="Interfaces\Basic\BasicConnector.cs" />

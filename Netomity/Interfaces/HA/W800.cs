@@ -49,6 +49,15 @@ namespace Netomity.Interfaces.HA
             var dBytes = Conversions.AsciiToBytes(data);
             var rBytes = Conversions.BytesReverse(dBytes);
 
+            // If this is a corrupt packet, discard and exit
+            if (rBytes[0] + rBytes[1] != 255 ||
+                rBytes[2] + rBytes[3] != 255)
+            {
+                Log("Corrupt Packet Received");
+                return new List<Command>();
+            }
+
+
             var sBytes = new byte[4]
             {
                 rBytes[2],
@@ -90,8 +99,39 @@ namespace Netomity.Interfaces.HA
                 }
             };
 
+            if (commands[0] != null)
+                Log(Core.Logger.Level.Info, String.Format("Received Command: {0} -> {1}: {2}",
+                    commands[0].Source,
+                    commands[0].Destination,
+                    commands[0].Primary.ToString()
+                    ));
+
             return commands;
         }
 
     }
+
+    /*
+1/6/2015 5:01:43 PM|Debug|W800Serial:Received Data:>d☼ ß< (F00F20DF)
+1/6/2015 5:01:43 PM|Debug|W800TCP:Sending Data:>d☼ ß< (F00F20DF)
+1/6/2015 5:01:43 PM|Debug|W800BC:Received Data:>d☼ ß< (F00F20DF)
+1/6/2015 5:01:44 PM|Debug|W800HA:HA Interface Received: >d☼ ß< (F00F20DF)
+1/6/2015 5:01:43 PM|Debug|W800Serial:Received Data:>d☼ ß< (F00F20DF)
+1/6/2015 5:01:44 PM|Debug|W800TCP:Sending Data:>d☼ ß< (F00F20DF)
+1/6/2015 5:01:44 PM|Debug|W800BC:Received Data:>d☼ ß< (F00F20DF)
+1/6/2015 5:01:44 PM|Debug|W800HA:HA Interface Received: >d☼ ß< (F00F20DF)
+1/6/2015 5:01:44 PM|Debug|W800Serial:Received Data:>d☼ ß< (F00F20DF)
+1/6/2015 5:01:44 PM|Debug|W800TCP:Sending Data:>d☼ ß< (F00F20DF)
+1/6/2015 5:01:44 PM|Debug|W800BC:Received Data:>d☼ ß< (F00F20DF)
+1/6/2015 5:01:44 PM|Debug|W800HA:HA Interface Received: >d☼ ß< (F00F20DF)
+1/6/2015 5:01:44 PM|Debug|W800Serial:Received Data:>d☼ ß< (F00F20DF)
+1/6/2015 5:01:44 PM|Debug|W800TCP:Sending Data:>d☼ ß< (F00F20DF)
+1/6/2015 5:01:44 PM|Debug|W800BC:Received Data:>d☼ ß< (F00F20DF)
+1/6/2015 5:01:44 PM|Debug|W800HA:HA Interface Received: >d☼ ß< (F00F20DF)
+1/6/2015 5:01:44 PM|Debug|W800HA:Received Command: j1 -> j1: off
+1/6/2015 5:01:44 PM|Debug|Test Motion 1:Command Received: off
+1/6/2015 5:01:44 PM|Debug|Test Motion 1:State Current: on
+1/6/2015 5:01:44 PM|Debug|Test Motion 1:State Changed: off
+1/6/2015 5:01:48 PM|Debug|:HeartBeat
+     * */
 }

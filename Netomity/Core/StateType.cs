@@ -18,6 +18,8 @@ namespace Netomity.Core
         public static readonly StateType Level = new StateType("level");
         public static readonly StateType Motion = new StateType("motion");
         public static readonly StateType Still = new StateType("still");
+        public static readonly StateType Light = new StateType("light");
+        public static readonly StateType Dark = new StateType("dark");
 
 
         private StateType(String name)

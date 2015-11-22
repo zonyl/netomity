@@ -88,7 +88,14 @@ namespace Netomity.Interfaces.HA
                             || messageType == InsteonMessageType.Direct
                             || messageType == InsteonMessageType.BroadCastLinkAll
                             ))
+                    { 
                         commands.Add(command);
+                        Log(Core.Logger.Level.Info, String.Format("Received Command: {0} -> {1}: {2}",
+                            command.Source,
+                            command.Destination,
+                            command.Primary
+                            ));
+                    }
                 }
 
             return commands;

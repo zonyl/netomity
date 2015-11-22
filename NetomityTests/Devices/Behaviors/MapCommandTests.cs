@@ -9,14 +9,14 @@ using System.Threading;
 namespace NetomityTests.Devices.Behaviors
 {
     [TestClass]
-    public class MapTests
+    public class MapCommandTests
     {
-        Netomity.Devices.Behaviors.Map _m = null;
+        Netomity.Devices.Behaviors.MapCommand _m = null;
 
         [TestInitialize]
         public void SetUp()
         {
-            _m = new Map(primaryInput: CommandType.On,
+            _m = new MapCommand(primaryInput: CommandType.On,
                 primaryOutput: CommandType.Off);
         }
 
@@ -39,7 +39,7 @@ namespace NetomityTests.Devices.Behaviors
         [TestMethod]
         public void DoubleMapTest()
         {
-            var m = new Map(primaryInput: CommandType.On, primaryOutput: CommandType.Off);
+            var m = new MapCommand(primaryInput: CommandType.On, primaryOutput: CommandType.Off);
             m.Add(primaryInput: CommandType.Off, primaryOutput: CommandType.On, secondaryOutput: "test");
             var sd = new StateDevice(behaviors: new List<BehaviorBase>() {
                 m
@@ -58,7 +58,7 @@ namespace NetomityTests.Devices.Behaviors
         public void SpecificMatchFirst()
         {
             var motion = new StateDevice();
-            var m = new Map(
+            var m = new MapCommand(
               primaryInput: CommandType.On,
               primaryOutput: CommandType.Off
                 );
@@ -82,10 +82,10 @@ namespace NetomityTests.Devices.Behaviors
         [TestMethod]
         public void DelayTest()
         {
-            var m = new Map(
+            var m = new MapCommand(
                 primaryInput: CommandType.Motion,
                 primaryOutput: CommandType.Off,
-                delay: 2);
+                delaySecs: 2);
             var sd = new StateDevice(behaviors: new List<BehaviorBase>() { m });
             Assert.AreEqual(StateType.Unknown, sd.State.Primary);
             sd.Command(primary: CommandType.Motion);

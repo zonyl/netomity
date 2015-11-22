@@ -9,7 +9,7 @@ using System.Threading;
 namespace NetomityTests.Devices
 {
     [TestClass]
-    public class DeviceFunctional
+    public class FunctionalTests
     {
 
         [TestInitialize]
@@ -22,14 +22,14 @@ namespace NetomityTests.Devices
         {
             // Motion Sensor driven light with a delay off time of 2 secs
             var motion = new StateDevice();
-            var mapping = new Map(
+            var mapping = new MapCommand(
                 primaryInput: CommandType.Motion,
                 primaryOutput: CommandType.On
                 );
             mapping.Add(
                 primaryInput: CommandType.Motion,
                 primaryOutput: CommandType.Off,
-                delay: 2
+                delaySecs: 2
                 );
             var sd = new StateDevice(
                     devices: new List<StateDevice>() { motion },

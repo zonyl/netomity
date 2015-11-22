@@ -20,11 +20,11 @@ namespace Netomity.Devices
         State _state = null;
         State _previousState = null;
 
-        List<Action<Command>> _commandDelegates = null;
-        List<Action<State>> _stateDelegates = null;
-        List<StateDevice> _devices = null;
-        List<Command> _commandsAvailable = null;
-        List<BehaviorBase> _behaviors = null;
+        protected List<Action<Command>> _commandDelegates = null;
+        protected List<Action<State>> _stateDelegates = null;
+        protected List<StateDevice> _devices = null;
+        protected List<Command> _commandsAvailable = null;
+        protected List<BehaviorBase> _behaviors = null;
 
         public StateDevice(string address=null, HAInterface iface=null, List<StateDevice> devices=null, List<BehaviorBase> behaviors=null)
         {
@@ -48,13 +48,23 @@ namespace Netomity.Devices
                 _iface.OnCommand(source: _address, action: _CommandReceived);
         }
 
-        private void RegisterBehaviors(List<BehaviorBase> behaviors)
+        protected void RegisterBehaviors(List<BehaviorBase> behaviors)
         {
             if (behaviors != null)
-                _behaviors = behaviors;
+                behaviors.ForEach(b => RegisterBehavior(b));
+        }
 
-            _behaviors.ForEach(b => b.Register(this));
+        protected void RegisterBehavior(BehaviorBase behavior)
+        {
+            if (behavior != null)
+            {
+                if (_behaviors == null)
+                    _behaviors = new List<BehaviorBase>();
 
+                _behaviors.Add(behavior);
+
+                behavior.Register(this);
+            }
         }
 
         internal virtual void _Initialize()
@@ -170,6 +180,12 @@ namespace Netomity.Devices
             Log("Filtering");
             var c = ApplyBehaviors(command);
 
+            if (c == null)
+            {
+                Log(String.Format("Command Filtered to nothing"));
+                return true;
+            }
+
             Log(String.Format("Sending command to interface: {0}", c.Primary.ToString()));
             try
             {
@@ -180,12 +196,12 @@ namespace Netomity.Devices
                     Log("Command issued however no interface");
                     isSent = true;
                 }
-                _CommandReceived(c);
             }
             catch (System.Exception ex)
             {
                 Log(ex);
             }
+            _CommandReceived(c);
             return isSent;
 
         }
