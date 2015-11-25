@@ -91,6 +91,8 @@
     <Compile Include="Devices\Behaviors\FilterTests.cs" />
     <Compile Include="Devices\Behaviors\ScheduleTests.cs" />
     <Compile Include="Devices\Behaviors\MapCommandTests.cs" />
+    <Compile Include="Devices\DoorTests.cs" />
+    <Compile Include="Devices\MotionTests.cs" />
     <Compile Include="Devices\LocationTests.cs" />
     <Compile Include="Devices\StateDeviceTests.cs" />
     <Compile Include="Devices\FunctionalTests.cs" />

@@ -117,6 +117,8 @@
     <Compile Include="Devices\Behaviors\Filter.cs" />
     <Compile Include="Devices\Behaviors\MapCommand.cs" />
     <Compile Include="Devices\Behaviors\Schedule.cs" />
+    <Compile Include="Devices\Door.cs" />
+    <Compile Include="Devices\Motion.cs" />
     <Compile Include="Devices\Light.cs" />
     <Compile Include="Devices\Location.cs" />
     <Compile Include="Devices\Scene.cs" />

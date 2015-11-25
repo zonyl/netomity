@@ -12,8 +12,8 @@ namespace Netomity.Devices.Behaviors
 
         List<Mapping> _mappings = null;
 
-        public MapCommand(CommandType primaryInput,
-                    CommandType primaryOutput,
+        public MapCommand(CommandType primaryInput=null,
+                    CommandType primaryOutput=null,
                     string secondaryInput=null,
                     string secondaryOutput=null,
                     string sourceAddress=null,
@@ -21,14 +21,15 @@ namespace Netomity.Devices.Behaviors
                     int delaySecs=0
             )
         {
-            Add(primaryInput: primaryInput,
-                primaryOutput: primaryOutput,
-                secondaryInput: secondaryInput,
-                secondaryOutput: secondaryOutput,
-                sourceAddress: sourceAddress,
-                sourceObject: sourceObject,
-                delaySecs: delaySecs
-                );
+            if (primaryInput != null)
+                Add(primaryInput: primaryInput,
+                    primaryOutput: primaryOutput,
+                    secondaryInput: secondaryInput,
+                    secondaryOutput: secondaryOutput,
+                    sourceAddress: sourceAddress,
+                    sourceObject: sourceObject,
+                    delaySecs: delaySecs
+                    );
         }
 
         public void Add(CommandType primaryInput,
