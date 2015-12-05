@@ -42,7 +42,8 @@ namespace Netomity.Interfaces.HA
             _OnCommandList = new List<Tuple<string, OnCommandCallBack>>();
             _OnCommandListA = new List<Tuple<string, Action<Command>>>();
 
-            _interface.DataReceived += _DataReceived;
+            if (_interface != null)
+                _interface.DataReceived += _DataReceived;
             Log("Initialized");
             _taskDispatch = Task.Factory.StartNew(() => {
                 try

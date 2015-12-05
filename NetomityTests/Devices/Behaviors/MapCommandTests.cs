@@ -5,6 +5,7 @@ using Netomity.Core;
 using Netomity.Devices;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace NetomityTests.Devices.Behaviors
 {
@@ -33,7 +34,46 @@ namespace NetomityTests.Devices.Behaviors
             Assert.AreEqual(StateType.Unknown, sd.State.Primary);
             sd.On();
             Assert.AreEqual(StateType.Off, sd.State.Primary);
+        }
 
+        [TestMethod]
+        public void SimpleMapOverlayTest()
+        {
+            const string testSecondary = "This is a test";
+            var m = new MapCommand(primaryInput: CommandType.On,
+                primaryOutput: CommandType.Off);
+
+            var c = new Command()
+            {
+                Primary = CommandType.On,
+                Secondary = testSecondary,
+            };
+            var rC = m.FilterCommand(c);
+            Assert.AreEqual(testSecondary, rC.Secondary);
+        }
+
+        [TestMethod]
+        public void SimpleMapDictTest()
+        {
+            const string testString = "This is a test";
+            const string testKey = "key1";
+            const string testValue = "value1";
+            Command pCommand = null;
+            var i = new Netomity.Interfaces.Basic.Fakes.StubBasicInterface();
+            var ha = new Netomity.Interfaces.HA.Fakes.StubHAInterface(iface: i);
+            ha.CommandCommand = (command) => { pCommand = command; return Task.Run(() => { return true; }); };
+            var m = new MapCommand(primaryInput: CommandType.On, 
+                primaryOutput: CommandType.Off,
+                secondaryOutput: testString,
+                stringParams: new Dictionary<string,string>(){ {testKey, testValue}});
+            var sd = new StateDevice(iface: ha, behaviors: new List<BehaviorBase>() { m });
+            Assert.AreEqual(StateType.Unknown, sd.State.Primary);
+            var r = sd.On();
+            Assert.IsTrue(r.Result);
+            Assert.AreEqual(StateType.Off, sd.State.Primary);
+            Assert.AreEqual(CommandType.Off, pCommand.Primary);
+            Assert.AreEqual(testString, pCommand.Secondary);
+            Assert.AreEqual(testValue, pCommand.StringParams[testKey]);
         }
 
         [TestMethod]

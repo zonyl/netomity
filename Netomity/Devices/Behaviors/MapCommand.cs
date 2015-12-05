@@ -16,7 +16,8 @@ namespace Netomity.Devices.Behaviors
                     CommandType primaryOutput=null,
                     string secondaryInput=null,
                     string secondaryOutput=null,
-                    string sourceAddress=null,
+                    Dictionary<string, string> stringParams = null,
+                    string sourceAddress = null,
                     NetomityObject sourceObject=null,
                     int delaySecs=0
             )
@@ -26,6 +27,7 @@ namespace Netomity.Devices.Behaviors
                     primaryOutput: primaryOutput,
                     secondaryInput: secondaryInput,
                     secondaryOutput: secondaryOutput,
+                    stringParams: stringParams,
                     sourceAddress: sourceAddress,
                     sourceObject: sourceObject,
                     delaySecs: delaySecs
@@ -36,6 +38,7 @@ namespace Netomity.Devices.Behaviors
                     CommandType primaryOutput,
                     string secondaryInput=null,
                     string secondaryOutput=null,
+                    Dictionary<string, string> stringParams=null,
                     string sourceAddress=null,
                     NetomityObject sourceObject=null,
                     int delaySecs=0
@@ -50,6 +53,7 @@ namespace Netomity.Devices.Behaviors
                 PrimaryOutput = primaryOutput,
                 SecondaryInput = secondaryInput,
                 SecondaryOutput = secondaryOutput,
+                StringParams = stringParams,
                 SourceAddress = sourceAddress,
                 SourceObject = sourceObject,
                 DelaySecs = delaySecs,
@@ -74,12 +78,30 @@ namespace Netomity.Devices.Behaviors
                         IsMapFound = true;
                         mapped = new Command()
                         {
-                            Primary = mapping.PrimaryOutput,
-                            Secondary = mapping.SecondaryOutput,
                             Destination = command.Destination,
+                            Primary = command.Primary,
+                            Secondary = command.Secondary,
+                            StringParams = command.StringParams,
                             Source = command.Source,
                             SourceObject = command.SourceObject,
                         };
+                        
+
+                        if (mapping.PrimaryOutput != null)
+                            mapped.Primary = mapping.PrimaryOutput;
+
+                        if (mapping.SecondaryOutput != null)
+                            mapped.Secondary = mapping.SecondaryOutput;
+
+                        if (mapping.StringParams != null)
+                            mapped.StringParams = mapping.StringParams;
+
+                        if (mapping.SourceAddress != null)
+                            mapped.Source = mapping.SourceAddress;
+
+                        if (mapping.SourceObject != null)
+                            mapped.SourceObject = mapping.SourceObject;
+
                         if (mapping.DelaySecs != 0)
                             mapped = DelayCommand(mapping: mapping, command: mapped, delay: mapping.DelaySecs);
                         mappedOutputs.Add(mapped);
@@ -119,6 +141,7 @@ namespace Netomity.Devices.Behaviors
         internal CommandType PrimaryOutput { get; set; }
         internal string SecondaryInput { get; set; }
         internal string SecondaryOutput { get; set; }
+        internal Dictionary<string, string> StringParams { get; set; }
         internal string SourceAddress { get; set; }
         internal NetomityObject SourceObject { get; set; }
         internal int DelaySecs { get; set; }

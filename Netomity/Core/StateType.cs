@@ -22,6 +22,7 @@ namespace Netomity.Core
         public static readonly StateType Dark = new StateType("dark");
         public static readonly StateType Open = new StateType("open");
         public static readonly StateType Closed = new StateType("close");
+        public static readonly StateType Notify = new StateType("notify");
 
 
         private StateType(String name)

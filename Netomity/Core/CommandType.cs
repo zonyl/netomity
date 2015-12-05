@@ -22,6 +22,7 @@ namespace Netomity.Core
         public static readonly CommandType Dark = new CommandType("dark");
         public static readonly CommandType Open = new CommandType("open");
         public static readonly CommandType Close = new CommandType("close");
+        public static readonly CommandType Notify = new CommandType("notify");
 
 
 

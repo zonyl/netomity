@@ -15,7 +15,7 @@ namespace Netomity.Devices
     public class StateDevice: NetomityObject
     {
         HAInterface _iface = null;
-        string _address = null;
+        public string Address { get; set; }
 
         State _state = null;
         State _previousState = null;
@@ -29,7 +29,7 @@ namespace Netomity.Devices
         public StateDevice(string address=null, HAInterface iface=null, List<StateDevice> devices=null, List<BehaviorBase> behaviors=null)
         {
             _iface = iface;
-            _address = address;
+            Address = address;
             _commandDelegates = new List<Action<Command>>();
             _stateDelegates = new List<Action<State>>();
             _behaviors = new List<BehaviorBase>();
@@ -45,7 +45,7 @@ namespace Netomity.Devices
             RegisterBehaviors(behaviors);
 
             if(_iface !=null)
-                _iface.OnCommand(source: _address, action: _CommandReceived);
+                _iface.OnCommand(source: Address, action: _CommandReceived);
         }
 
         protected void RegisterBehaviors(List<BehaviorBase> behaviors)
@@ -115,7 +115,7 @@ namespace Netomity.Devices
             }
         }
 
-        private void _CommandReceived(Command command)
+        protected virtual void _CommandReceived(Command command)
         {
             State newState = null;
             Log(String.Format("Command Received: {0}", command.Primary.ToString()));
@@ -167,7 +167,7 @@ namespace Netomity.Devices
 
             return new State()
             {
-                Primary = st,
+                Primary = st ?? StateType.Unknown,
                 Secondary = command.Secondary
             };
         }
@@ -206,7 +206,7 @@ namespace Netomity.Devices
 
         }
 
-        private Command ApplyBehaviors(Command command)
+        protected virtual Command ApplyBehaviors(Command command)
         {
             Command commandOutput = command;
             _behaviors.OrderByDescending(b => b.Priority).ToList().ForEach(b => {
@@ -216,14 +216,15 @@ namespace Netomity.Devices
             return commandOutput;
         }
 
-        public Task<bool> Command(CommandType primary, string secondary=null, NetomityObject sourceObject=null)
+        public Task<bool> Command(CommandType primary, string secondary=null, NetomityObject sourceObject=null, Dictionary<string, string> stringParams=null)
         {
             return Command(command: new Command()
             {
-                Destination = _address,
+                Destination = Address,
                 Primary = primary,
                 Secondary = secondary,
-                SourceObject = sourceObject
+                SourceObject = sourceObject,
+                StringParams = stringParams
             });
         }
 

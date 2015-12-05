@@ -13,6 +13,7 @@ namespace Netomity.Core
         public CommandType Primary { get; set; }
         public string Secondary { get; set; }
         public NetomityObject SourceObject { get; set; }
+        public Dictionary<String, String> StringParams { get; set; }
 
         public static Command Create(string destination, CommandType type)
         {

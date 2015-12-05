@@ -117,6 +117,7 @@
     <Compile Include="Devices\Behaviors\Filter.cs" />
     <Compile Include="Devices\Behaviors\MapCommand.cs" />
     <Compile Include="Devices\Behaviors\Schedule.cs" />
+    <Compile Include="Devices\Notification.cs" />
     <Compile Include="Devices\Door.cs" />
     <Compile Include="Devices\Motion.cs" />
     <Compile Include="Devices\Light.cs" />
@@ -132,6 +133,7 @@
     <Compile Include="Core\Command.cs" />
     <Compile Include="Core\CommandType.cs" />
     <Compile Include="Interfaces\HA\HAInterface.cs" />
+    <Compile Include="Interfaces\HA\EmailServer.cs" />
     <Compile Include="Interfaces\HA\W800.cs" />
     <Compile Include="Interfaces\HA\Insteon.cs" />
     <Compile Include="Interfaces\HA\SendParams.cs" />

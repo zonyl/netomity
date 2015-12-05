@@ -97,9 +97,11 @@
     <Compile Include="Devices\StateDeviceTests.cs" />
     <Compile Include="Devices\FunctionalTests.cs" />
     <Compile Include="Devices\LightTests.cs" />
+    <Compile Include="Devices\NotificationTests.cs" />
     <Compile Include="Interfaces\Basic\TCPClientTests.cs" />
     <Compile Include="Interfaces\Basic\TCPServerTests.cs" />
     <Compile Include="Interfaces\Basic\BasicConnectorTests.cs" />
+    <Compile Include="Interfaces\HA\EmailServerTests.cs" />
     <Compile Include="Interfaces\HA\W800Tests.cs" />
     <Compile Include="Interfaces\HA\InsteonTests.cs" />
     <Compile Include="Interfaces\HA\HAInterfaceTests.cs" />
@@ -117,13 +119,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Fakes Include="Fakes\Netomity.fakes" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <Fakes Include="Fakes\System.Net.Http.Formatting.fakes" />
     <Fakes Include="Fakes\System.fakes" />
     <Fakes Include="Fakes\mscorlib.fakes" />
+    <Fakes Include="Fakes\Netomity.fakes" />
     <None Include="packages.config" />
   </ItemGroup>
   <Choose>
