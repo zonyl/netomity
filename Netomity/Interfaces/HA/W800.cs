@@ -1,4 +1,5 @@
 ﻿using Netomity.Core;
+using Netomity.Core.Enum;
 using Netomity.Interfaces.Basic;
 using Netomity.Utility;
 using System;

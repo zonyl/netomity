@@ -8,6 +8,7 @@ using System.Threading;
 using Netomity.Interfaces;
 using Netomity.Core;
 using System.Collections.Generic;
+using Netomity.Core.Enum;
 
 namespace NetomityTests.Interfaces.HA
 {
@@ -46,10 +47,10 @@ namespace NetomityTests.Interfaces.HA
             {
                 Primary = CommandType.Notify,
                 Secondary = BODY,
-                StringParams = new Dictionary<string, string>(){
-                    {EmailParamsType.ToAddress, TO_ADDRESS},
-                    {EmailParamsType.ToAddressName, TO_ADDRESS_NAME},
-                    {EmailParamsType.Subject, SUBJECT},
+                StringParams = new Dictionary<StringEnum, string>(){
+                    {NotificationParamType.ToAddress, TO_ADDRESS},
+                    {NotificationParamType.ToAddressName, TO_ADDRESS_NAME},
+                    {NotificationParamType.Subject, SUBJECT},
                 },
             };
             var r = _es.Command(command);

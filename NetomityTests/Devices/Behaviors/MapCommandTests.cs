@@ -6,6 +6,7 @@ using Netomity.Devices;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Netomity.Core.Enum;
 
 namespace NetomityTests.Devices.Behaviors
 {
@@ -56,7 +57,7 @@ namespace NetomityTests.Devices.Behaviors
         public void SimpleMapDictTest()
         {
             const string testString = "This is a test";
-            const string testKey = "key1";
+            NotificationParamType testKey = NotificationParamType.Subject;
             const string testValue = "value1";
             Command pCommand = null;
             var i = new Netomity.Interfaces.Basic.Fakes.StubBasicInterface();
@@ -65,7 +66,7 @@ namespace NetomityTests.Devices.Behaviors
             var m = new MapCommand(primaryInput: CommandType.On, 
                 primaryOutput: CommandType.Off,
                 secondaryOutput: testString,
-                stringParams: new Dictionary<string,string>(){ {testKey, testValue}});
+                stringParams: new Dictionary<StringEnum,string>(){ {testKey, testValue}});
             var sd = new StateDevice(iface: ha, behaviors: new List<BehaviorBase>() { m });
             Assert.AreEqual(StateType.Unknown, sd.State.Primary);
             var r = sd.On();

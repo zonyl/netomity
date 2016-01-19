@@ -96,6 +96,10 @@ namespace Netomity.Core
                 message: message
                 );
         }
+        public void Log(string fmessage, params string[] args)
+        {
+            Log(String.Format(fmessage, args));
+        }
 
         private void LogString(Core.Logger.Level level, string message)
         {

@@ -1,5 +1,6 @@
 ﻿using Innovative.SolarCalculator;
 using Netomity.Core;
+using Netomity.Core.Enum;
 using Netomity.Interfaces.HA;
 using System;
 using System.Collections.Generic;

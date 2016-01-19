@@ -9,6 +9,7 @@ using Netomity.Utility;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Threading;
+using Netomity.Core.Enum;
 
 namespace Netomity.Interfaces.HA
 {

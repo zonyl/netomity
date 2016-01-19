@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Netomity.Core.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,7 @@ namespace Netomity.Core
         public CommandType Primary { get; set; }
         public string Secondary { get; set; }
         public NetomityObject SourceObject { get; set; }
-        public Dictionary<String, String> StringParams { get; set; }
+        public Dictionary<StringEnum, String> StringParams { get; set; }
 
         public static Command Create(string destination, CommandType type)
         {

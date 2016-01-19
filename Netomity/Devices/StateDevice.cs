@@ -1,4 +1,5 @@
 ﻿using Netomity.Core;
+using Netomity.Core.Enum;
 using Netomity.Devices.Behaviors;
 using Netomity.Interfaces;
 using Netomity.Interfaces.HA;
@@ -216,7 +217,7 @@ namespace Netomity.Devices
             return commandOutput;
         }
 
-        public Task<bool> Command(CommandType primary, string secondary=null, NetomityObject sourceObject=null, Dictionary<string, string> stringParams=null)
+        public Task<bool> Command(CommandType primary, string secondary=null, NetomityObject sourceObject=null, Dictionary<StringEnum, string> stringParams=null)
         {
             return Command(command: new Command()
             {

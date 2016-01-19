@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Threading;
 using Netomity.Interfaces;
 using Netomity.Core;
+using Netomity.Core.Enum;
 
 namespace NetomityTests.Interfaces.HA
 {

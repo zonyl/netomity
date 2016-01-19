@@ -1,4 +1,5 @@
 ﻿using Netomity.Core;
+using Netomity.Core.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,7 +45,14 @@ namespace Netomity.Devices.Behaviors
 
         internal void DelegateCommand(CommandType primary, string secondary, NetomityObject sourceObject)
         {
-            Targets.ForEach(t => t.Command(primary: primary, secondary: secondary, sourceObject: sourceObject));
+            
+            Targets.ForEach(t =>
+                {
+                    Log("Delegating Command: {0} to {1}", primary, t.Name);
+                    t.Command(primary: primary, secondary: secondary, sourceObject: sourceObject);
+
+                }
+            );
         }
 
     }

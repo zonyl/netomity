@@ -1,4 +1,5 @@
 ﻿using Netomity.Core;
+using Netomity.Core.Enum;
 using Netomity.Devices;
 using Netomity.Utility;
 using Newtonsoft.Json;

@@ -11,6 +11,7 @@ using Netomity.Devices.Behaviors;
 using Microsoft.QualityTools.Testing.Fakes;
 using System.Fakes;
 using System.Threading;
+using Netomity.Core.Enum;
 
 namespace NetomityTests.Devices
 {

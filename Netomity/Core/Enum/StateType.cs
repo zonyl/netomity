@@ -5,12 +5,11 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Netomity.Core
+namespace Netomity.Core.Enum
 {
     [DataContract]
-    public sealed class StateType
+    public sealed class StateType: StringEnum
     {
-        private readonly string _name;
 
         public static readonly StateType Unknown = new StateType("unknown");
         public static readonly StateType On = new StateType("on");
@@ -25,23 +24,6 @@ namespace Netomity.Core
         public static readonly StateType Notify = new StateType("notify");
 
 
-        private StateType(String name)
-        {
-            _name = name;
-        }
-
-        public override String ToString()
-        {
-            return _name;
-        }
-
-        [DataMember]
-        public string Value
-        {
-            get
-            {
-                return _name;
-            }
-        }
+        private StateType(String name) : base(name: name) { }
     }
 }

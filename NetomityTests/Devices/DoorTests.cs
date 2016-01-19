@@ -5,6 +5,7 @@ using Netomity.Core;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Netomity.Core.Enum;
 
 namespace NetomityTests.Devices
 {

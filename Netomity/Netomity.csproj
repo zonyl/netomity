@@ -104,6 +104,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Enum\NotificationParamType.cs" />
+    <Compile Include="Core\Enum\StringEnum.cs" />
     <Compile Include="Devices\Behaviors\BaseBehavior.cs" />
     <Compile Include="Core\Factory.cs" />
     <Compile Include="Core\INetomityObject.cs" />
@@ -113,7 +115,7 @@
     <Compile Include="Core\NetomityObject.cs" />
     <Compile Include="Core\PeriodicTimer.cs" />
     <Compile Include="Core\State.cs" />
-    <Compile Include="Core\StateType.cs" />
+    <Compile Include="Core\Enum\StateType.cs" />
     <Compile Include="Devices\Behaviors\Filter.cs" />
     <Compile Include="Devices\Behaviors\MapCommand.cs" />
     <Compile Include="Devices\Behaviors\Schedule.cs" />
@@ -131,7 +133,7 @@
     <Compile Include="Interfaces\Basic\TCPClient.cs" />
     <Compile Include="Interfaces\Basic\TCPServer.cs" />
     <Compile Include="Core\Command.cs" />
-    <Compile Include="Core\CommandType.cs" />
+    <Compile Include="Core\Enum\CommandType.cs" />
     <Compile Include="Interfaces\HA\HAInterface.cs" />
     <Compile Include="Interfaces\HA\EmailServer.cs" />
     <Compile Include="Interfaces\HA\W800.cs" />

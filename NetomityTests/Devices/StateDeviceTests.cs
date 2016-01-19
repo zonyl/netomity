@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Netomity.Core;
 using System.Collections.Generic;
 using Netomity.Devices.Behaviors;
+using Netomity.Core.Enum;
 
 namespace NetomityTests.Devices
 {

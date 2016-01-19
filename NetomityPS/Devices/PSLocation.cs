@@ -11,17 +11,35 @@ using Netomity.Devices;
 
 namespace NetomityPS
 {
-    [Cmdlet(VerbsCommon.New, "StateDevice")]
-    public class PSStateDevice: PSCommon
+    [Cmdlet(VerbsCommon.New, "Location")]
+    public class PSLocation: PSCommon
     {
         [Parameter(
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
             ValueFromPipeline = true,
             Position = 0,
-            HelpMessage = "Interface"
+            HelpMessage = "Latitude"
         )]
-        public HAInterface Interface { get; set; }
+
+        public double Latitude { get; set; }
+        [Parameter(
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "Longitude"
+        )]
+        public double Longitude { get; set; }
+
+        [Parameter(
+            Mandatory = false,
+            ValueFromPipelineByPropertyName = true,
+            ValueFromPipeline = true,
+            Position = 0,
+            HelpMessage = "TimeZoneString"
+        )]
+        public string TimeZoneString { get; set; }
 
         [Parameter(
             Mandatory = false,
@@ -43,8 +61,8 @@ namespace NetomityPS
 
         protected override void ProcessRecord()
         {
-            WriteVerbose(String.Format("StateDevice - Interface:{0}", Interface));
-            WriteObject(new StateDevice(iface: Interface, address: Address) { Name = Name });
+            WriteVerbose(String.Format("Location - Latitude:{0}", Latitude));
+            WriteObject(new Location(latitude: Latitude, longitude: Longitude, timeZone: TimeZoneString) { Name = Name });
         }
     }
 }

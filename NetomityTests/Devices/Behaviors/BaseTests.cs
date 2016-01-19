@@ -4,6 +4,7 @@ using Netomity.Devices.Behaviors;
 using Netomity.Devices;
 using Netomity.Core;
 using System.Collections.Generic;
+using Netomity.Core.Enum;
 
 namespace NetomityTests.Devices.Behaviors
 {

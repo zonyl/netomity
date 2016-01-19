@@ -5,6 +5,7 @@ using Netomity.Core;
 using Netomity.Devices;
 using System.Collections.Generic;
 using System.Threading;
+using Netomity.Core.Enum;
 
 namespace NetomityTests.Devices
 {
@@ -21,7 +22,7 @@ namespace NetomityTests.Devices
         public void FunctionalLightGutsTest()
         {
             // Motion Sensor driven light with a delay off time of 2 secs
-            var motion = new StateDevice();
+            var motion = new StateDevice() { Name = "Motion1" };
             var mapping = new MapCommand(
                 primaryInput: CommandType.Motion,
                 primaryOutput: CommandType.On
@@ -33,8 +34,8 @@ namespace NetomityTests.Devices
                 );
             var sd = new StateDevice(
                     devices: new List<StateDevice>() { motion },
-                    behaviors: new List<BehaviorBase>(){mapping}
-                );
+                    behaviors: new List<BehaviorBase>() { mapping }
+                ) { Name = "StateDevice1" };
 
             Assert.AreEqual(StateType.Unknown, sd.State.Primary);
             sd.Command(primary: CommandType.Motion);

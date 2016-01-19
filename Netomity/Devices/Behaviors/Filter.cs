@@ -1,4 +1,5 @@
 ﻿using Netomity.Core;
+using Netomity.Core.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;

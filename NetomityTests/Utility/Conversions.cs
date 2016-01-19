@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Netomity.Utility;
 using Netomity.Core;
+using Netomity.Core.Enum;
 
 namespace NetomityTests.Utility
 {

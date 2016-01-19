@@ -1,4 +1,5 @@
 ﻿using Netomity.Core;
+using Netomity.Core.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace Netomity.Devices.Behaviors
                     CommandType primaryOutput=null,
                     string secondaryInput=null,
                     string secondaryOutput=null,
-                    Dictionary<string, string> stringParams = null,
+                    Dictionary<StringEnum, string> stringParams = null,
                     string sourceAddress = null,
                     NetomityObject sourceObject=null,
                     int delaySecs=0
@@ -38,7 +39,7 @@ namespace Netomity.Devices.Behaviors
                     CommandType primaryOutput,
                     string secondaryInput=null,
                     string secondaryOutput=null,
-                    Dictionary<string, string> stringParams=null,
+                    Dictionary<StringEnum, string> stringParams=null,
                     string sourceAddress=null,
                     NetomityObject sourceObject=null,
                     int delaySecs=0
@@ -125,6 +126,7 @@ namespace Netomity.Devices.Behaviors
             );
 
             mapping.Timer.Stop();
+            Log("Timer Started for {0} secs", delay.ToString());
             mapping.Timer.Start();
 
             return new Command()
@@ -141,7 +143,7 @@ namespace Netomity.Devices.Behaviors
         internal CommandType PrimaryOutput { get; set; }
         internal string SecondaryInput { get; set; }
         internal string SecondaryOutput { get; set; }
-        internal Dictionary<string, string> StringParams { get; set; }
+        internal Dictionary<StringEnum, string> StringParams { get; set; }
         internal string SourceAddress { get; set; }
         internal NetomityObject SourceObject { get; set; }
         internal int DelaySecs { get; set; }

@@ -1,4 +1,5 @@
 ﻿using Netomity.Core;
+using Netomity.Core.Enum;
 using Netomity.Interfaces.Basic;
 using Netomity.Utility;
 using System;
@@ -57,10 +58,10 @@ namespace Netomity.Interfaces.HA
             {
 
                 var fromAddress = new MailAddress(FromAddress, FromAddressName);
-                var toAddressName = command.StringParams[EmailParamsType.ToAddressName];
+                var toAddressName = command.StringParams[NotificationParamType.ToAddressName];
                 if (toAddressName == null)
-                    toAddressName = command.StringParams[EmailParamsType.ToAddress];
-                var toAddress = new MailAddress(command.StringParams[EmailParamsType.ToAddress], toAddressName);
+                    toAddressName = command.StringParams[NotificationParamType.ToAddress];
+                var toAddress = new MailAddress(command.StringParams[NotificationParamType.ToAddress], toAddressName);
 
                 var smtp = new SmtpClient
                 {
@@ -73,7 +74,7 @@ namespace Netomity.Interfaces.HA
                 };
                 using (var message = new MailMessage(fromAddress, toAddress)
                 {
-                    Subject = command.StringParams[EmailParamsType.Subject],
+                    Subject = command.StringParams[NotificationParamType.Subject],
                     Body = command.Secondary,
                 })
                 {
@@ -87,33 +88,5 @@ namespace Netomity.Interfaces.HA
         }
 
 
-    }
-
-
-    [DataContract]
-    public sealed class EmailParamsType
-    {
-        private readonly string _name;
-
-        public static readonly EmailParamsType ToAddress = new EmailParamsType("toAddress");
-        public static readonly EmailParamsType ToAddressName = new EmailParamsType("toAddressName");
-        public static readonly EmailParamsType Subject = new EmailParamsType("subject");
-
-        private EmailParamsType(String name)
-        {
-            _name = name;
-        }
-        public override String ToString()
-        {
-            return _name;
-        }
-
-        [DataMember]
-        public string Value
-        {
-            get { return _name; }
-        }
-
-        public static implicit operator string(EmailParamsType v) { return v.ToString(); }
     }
 }

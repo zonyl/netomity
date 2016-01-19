@@ -5,6 +5,7 @@ using Netomity.Core;
 using Netomity.Devices;
 using System.Collections.Generic;
 using System.Threading;
+using Netomity.Core.Enum;
 
 namespace NetomityTests.Devices.Behaviors
 {

@@ -6,6 +6,7 @@ using System.Net.Http.Formatting;
 using Netomity.Devices;
 using System.Collections.Generic;
 using Netomity.Core;
+using Netomity.Core.Enum;
 
 namespace NetomityTests.Web.Controllers
 {

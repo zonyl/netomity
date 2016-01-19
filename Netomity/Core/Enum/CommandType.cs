@@ -5,13 +5,11 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Netomity.Core
+namespace Netomity.Core.Enum
 {
     [DataContract]
-    public sealed class CommandType
+    public sealed class CommandType: StringEnum
     {
-        private readonly string _name;
-
         public static readonly CommandType Unknown = new CommandType("unknown");
         public static readonly CommandType On = new CommandType("on");
         public static readonly CommandType Off = new CommandType("off");
@@ -24,21 +22,6 @@ namespace Netomity.Core
         public static readonly CommandType Close = new CommandType("close");
         public static readonly CommandType Notify = new CommandType("notify");
 
-
-
-        private CommandType(String name)
-        {
-            _name = name;
-        }
-        public override String ToString()
-        {
-            return _name;
-        }
-        [DataMember]
-        public string Value
-        {
-            get { return _name; }
-        }
-
+        public CommandType(string name): base(name) {}
     }
 }

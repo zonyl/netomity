@@ -1,5 +1,6 @@
 ﻿using Innovative.SolarCalculator;
 using Netomity.Core;
+using Netomity.Core.Enum;
 using Netomity.Interfaces.HA;
 using System;
 using System.Collections.Generic;
@@ -44,9 +45,9 @@ namespace Netomity.Devices
                 rCommand.Secondary = rCommand.Secondary ?? Message;
                 if (rCommand.StringParams == null)
                 {
-                    rCommand.StringParams = new Dictionary<string, string>();
-                    rCommand.StringParams[EmailParamsType.Subject] = Subject;
-                    rCommand.StringParams[EmailParamsType.ToAddress] = Address;
+                    rCommand.StringParams = new Dictionary<StringEnum, string>();
+                    rCommand.StringParams[NotificationParamType.Subject] = Subject;
+                    rCommand.StringParams[NotificationParamType.ToAddress] = Address;
                 }
 
             }

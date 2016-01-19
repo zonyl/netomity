@@ -5,6 +5,7 @@ using Netomity.Core;
 using System.Collections.Generic;
 using Netomity.Interfaces.HA;
 using System.Threading.Tasks;
+using Netomity.Core.Enum;
 
 namespace NetomityTests.Devices
 {
@@ -53,8 +54,8 @@ namespace NetomityTests.Devices
             Assert.IsTrue(r.Result);
             Assert.AreEqual(CommandType.Notify, pCommand.Primary);
             Assert.AreEqual(BODY, pCommand.Secondary);
-            Assert.AreEqual(TO_ADDRESS, pCommand.StringParams[EmailParamsType.ToAddress]);
-            Assert.AreEqual(SUBJECT, pCommand.StringParams[EmailParamsType.Subject]);
+            Assert.AreEqual(TO_ADDRESS, pCommand.StringParams[NotificationParamType.ToAddress]);
+            Assert.AreEqual(SUBJECT, pCommand.StringParams[NotificationParamType.Subject]);
 
             
         }
