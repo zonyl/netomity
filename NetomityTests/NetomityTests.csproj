@@ -73,7 +73,9 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
@@ -102,6 +104,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\Conversions.cs" />
     <Compile Include="Utility\TimerTests.cs" />
+    <Compile Include="Utility\SystemTime.cs" />
     <Compile Include="Web\Controllers\HomeControllerTests.cs" />
     <Compile Include="Web\RestHostTests.cs" />
     <Compile Include="Web\WebHostTests.cs" />

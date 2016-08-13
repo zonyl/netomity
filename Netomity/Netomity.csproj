@@ -142,6 +142,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\Conversions.cs" />
     <Compile Include="Utility\Misc.cs" />
+    <Compile Include="Utility\SystemTime.cs" />
     <Compile Include="Utility\Timer.cs" />
     <Compile Include="Web\RestAPI.cs" />
     <Compile Include="Web\HomeController.cs" />

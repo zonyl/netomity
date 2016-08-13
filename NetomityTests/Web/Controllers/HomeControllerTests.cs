@@ -7,6 +7,7 @@ using Netomity.Devices;
 using System.Collections.Generic;
 using Netomity.Core;
 using Netomity.Core.Enum;
+using System.IO;
 
 namespace NetomityTests.Web.Controllers
 {
@@ -19,7 +20,9 @@ namespace NetomityTests.Web.Controllers
         public void SetUp()
         {
             _hc = new HomeController();
-            _hc.BaseFolder = @"C:\projects\Netomity\Netomity\Web\Content\";
+            var directory = string.Format(@"{0}\..\..\..\Netomity\Web\Content\", Directory.GetCurrentDirectory());
+
+            _hc.BaseFolder = directory;
         }
 
         [TestMethod]

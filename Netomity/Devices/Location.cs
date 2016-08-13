@@ -1,4 +1,6 @@
 ﻿using Innovative.SolarCalculator;
+
+
 using Netomity.Core;
 using Netomity.Core.Enum;
 using System;
@@ -19,7 +21,7 @@ namespace Netomity.Devices
         public TimeSpan Offset { get; set; }
         private PeriodicTimer pt;
 
-        public Location(double latitude=35.2269, double longitude=-80.8433, int offsetMinutes=0, string timeZone="Eastern Standard Time")
+        public Location(double latitude=35.2269, double longitude=-80.8433, double elevation=0, int offsetMinutes=0, string timeZone="Eastern Standard Time")
         {
             Latitude = latitude;
             Longitude = longitude;
@@ -36,22 +38,23 @@ namespace Netomity.Devices
             EvaluteTime();
         }
 
-        private void CalcTimes()
+        private void CalcTimes(DateTime dt)
         {
             TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById(TimeZone);
-            SolarTimes solarTimes = new SolarTimes(DateTime.Now, Latitude, Longitude);
+            SolarTimes solarTimes = new SolarTimes(dt, Latitude, Longitude);
             Sunset = TimeZoneInfo.ConvertTimeFromUtc(solarTimes.Sunset.ToUniversalTime(), tz);
             Sunrise = TimeZoneInfo.ConvertTimeFromUtc(solarTimes.Sunrise.ToUniversalTime(), tz);
+
         }
 
         public void EvaluteTime()
         {
-            CalcTimes();
-            var now = DateTime.Now.TimeOfDay;
-            var p = DateTime.Now;
+            var now = Netomity.Utility.SystemTime.Now;
+            var tod = now.TimeOfDay;
+            CalcTimes(now);
             var morning = Sunrise.TimeOfDay - Offset;
             var evening = Sunset.TimeOfDay + Offset;
-            if ((now < morning || now > evening) && this.State.Primary != StateType.Dark)
+            if ((tod < morning || tod > evening) && this.State.Primary != StateType.Dark)
                 this.Command(CommandType.Dark);
             else if (this.State.Primary != StateType.Light)
                 this.Command(CommandType.Light);
