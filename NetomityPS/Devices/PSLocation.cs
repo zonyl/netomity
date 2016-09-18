@@ -21,8 +21,8 @@ namespace NetomityPS
             Position = 0,
             HelpMessage = "Latitude"
         )]
-
         public double Latitude { get; set; }
+
         [Parameter(
             Mandatory = true,
             ValueFromPipelineByPropertyName = true,
@@ -50,19 +50,18 @@ namespace NetomityPS
         )]
         public string Name { get; set; }
 
-        [Parameter(
-            Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            ValueFromPipeline = true,
-            Position = 0,
-            HelpMessage = "Address"
-        )]
-        public string Address { get; set; }
 
         protected override void ProcessRecord()
         {
-            WriteVerbose(String.Format("Location - Latitude:{0}", Latitude));
+            WriteVerbose(String.Format("Location - Latitude:{0} Long:{1} Tz:{2}"
+                , Latitude
+                , Longitude
+                , TimeZoneString));
             WriteObject(new Location(latitude: Latitude, longitude: Longitude, timeZone: TimeZoneString) { Name = Name });
+            WriteVerbose(String.Format("Location2 - Latitude:{0} Long:{1} Tz:{2}"
+                , Latitude
+                , Longitude
+                , TimeZoneString));
         }
     }
 }

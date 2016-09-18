@@ -3,6 +3,7 @@
 
 using Netomity.Core;
 using Netomity.Core.Enum;
+using Netomity.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,10 +55,13 @@ namespace Netomity.Devices
             CalcTimes(now);
             var morning = Sunrise.TimeOfDay - Offset;
             var evening = Sunset.TimeOfDay + Offset;
-            if ((tod < morning || tod > evening) && this.State.Primary != StateType.Dark)
-                this.Command(CommandType.Dark);
-            else if (this.State.Primary != StateType.Light)
-                this.Command(CommandType.Light);
+            StateType calcState = null;
+            if (tod < morning || tod > evening)
+                calcState = StateType.Dark;
+            else
+                calcState = StateType.Light;
+            if (this.State.Primary != calcState)
+                this.Command(Conversions.ValueToStringEnum<CommandType>(calcState.ToString()));
         }
 
     }

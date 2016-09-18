@@ -28,38 +28,48 @@ namespace NetomityTests.Devices
         [TestMethod]
         public void SunsetTest()
         {
-                Netomity.Utility.SystemTime.Now = new DateTime(2015, 1, 1, 12, 0, 0);
-                var l = new Location(latitude: 35, longitude: -80);
-                Thread.Sleep(4000);
-                Assert.AreEqual(StateType.Light, l.State.Primary);
-                Netomity.Utility.SystemTime.Now = new DateTime(2015, 1, 1, 23, 0, 0);
-                l.EvaluteTime();
-                Thread.Sleep(4000);
-                Assert.AreEqual(StateType.Dark, l.State.Primary);
+            Netomity.Utility.SystemTime.Now = new DateTime(2015, 1, 1, 12, 0, 0);
+            var l = new Location(latitude: 35, longitude: -80);
+            l.EvaluteTime();
+            Assert.AreEqual(StateType.Light, l.State.Primary);
+
+            Netomity.Utility.SystemTime.Now = new DateTime(2015, 1, 1, 23, 0, 0);
+            l.EvaluteTime();
+            Assert.AreEqual(StateType.Dark, l.State.Primary);
         }
 
         [TestMethod]
         public void SunRiseOffsetTest()
         {
-            using (ShimsContext.Create())
-            {
-                const int OFFSET = 15;
-                Netomity.Utility.SystemTime.Now = new DateTime(2015, 1, 1, 1, 0, 0);
-                var l = new Location(latitude: 35, longitude: -80, offsetMinutes: OFFSET);
-                var sunrise = l.Sunrise;
-                var oSunrise = sunrise - new TimeSpan(0, OFFSET, 0);
-                Thread.Sleep(2000);
-                Assert.AreEqual(StateType.Dark, l.State.Primary);
-                Netomity.Utility.SystemTime.Now = new DateTime(2015, 1, 1,
-                    oSunrise.Hour,
-                    oSunrise.Minute + 1,
-                    oSunrise.Second);
-                Thread.Sleep(4000);
-                Assert.AreEqual(StateType.Light, l.State.Primary);
+            const int OFFSET = 15;
+            Netomity.Utility.SystemTime.Now = new DateTime(2015, 1, 1, 1, 0, 0);
+            var l = new Location(latitude: 35, longitude: -80, offsetMinutes: OFFSET);
+            var sunrise = l.Sunrise;
+            var oSunrise = sunrise - new TimeSpan(0, OFFSET, 0);
+            l.EvaluteTime();
+            Assert.AreEqual(StateType.Dark, l.State.Primary);
 
-            }
-    }
+            Netomity.Utility.SystemTime.Now = new DateTime(2015, 1, 1,
+                oSunrise.Hour,
+                oSunrise.Minute + 1,
+                oSunrise.Second);
+            l.EvaluteTime();
+            Assert.AreEqual(StateType.Light, l.State.Primary);
+        }
 
+        [TestMethod]
+        public void SteadyStateTest()
+        {
+            const int OFFSET = 15;
+            Netomity.Utility.SystemTime.Now = new DateTime(2015, 1, 1, 1, 0, 0);
+            var l = new Location(latitude: 35, longitude: -80, offsetMinutes: OFFSET);
+            var sunrise = l.Sunrise;
+            var oSunrise = sunrise - new TimeSpan(0, OFFSET, 0);
+            Thread.Sleep(2000);
+            Assert.AreEqual(StateType.Dark, l.State.Primary);
+            Thread.Sleep(4000);
+            Assert.AreEqual(StateType.Dark, l.State.Primary);
+        }
 
     }
 }
