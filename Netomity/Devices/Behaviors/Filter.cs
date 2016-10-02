@@ -18,6 +18,7 @@ namespace Netomity.Devices.Behaviors
                     StateType filterState
             )
         {
+            Priority = BehaviorPriority.MediumMediumLast;
             Add(primaryInput: primaryInput,
                 filterDevice: filterDevice,
                 filterState: filterState

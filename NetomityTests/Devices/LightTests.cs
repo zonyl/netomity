@@ -92,7 +92,7 @@ namespace NetomityTests.Devices
             l.On();
             Thread.Sleep(1000);
             Assert.AreEqual(StateType.Unknown, l.State.Primary);
-            Thread.Sleep(5000);
+            Thread.Sleep(6000);
             Assert.AreEqual(StateType.Level, l.State.Primary);
 
         }

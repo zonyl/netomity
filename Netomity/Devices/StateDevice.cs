@@ -210,7 +210,7 @@ namespace Netomity.Devices
         protected virtual Command ApplyBehaviors(Command command)
         {
             Command commandOutput = command;
-            _behaviors.OrderByDescending(b => b.Priority).ToList().ForEach(b => {
+            _behaviors.OrderBy(b => Convert.ToInt32(b.Priority)).ToList().ForEach(b => {
                 commandOutput = b.FilterCommand(commandOutput);
             }
                 );

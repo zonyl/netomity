@@ -80,6 +80,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\PSSchedule.cs" />
+    <Compile Include="Devices\PSStateType.cs" />
+    <Compile Include="Devices\PSCommandType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Interfaces\PSEmailServer.cs" />
     <Compile Include="Devices\PSLocation.cs" />

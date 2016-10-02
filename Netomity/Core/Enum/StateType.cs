@@ -24,6 +24,6 @@ namespace Netomity.Core.Enum
         public static readonly StateType Notify = new StateType("notify");
 
 
-        private StateType(String name) : base(name: name) { }
+        public StateType(String name) : base(name: name) { }
     }
 }
